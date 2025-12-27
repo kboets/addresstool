@@ -1,0 +1,91 @@
+
+<section class="main-container">
+  <h2 translate>Zoek scherm</h2>
+
+  <form [formGroup]="searchForm" class="address-form">
+    <div class="row row-space mt-2">
+      <div class="col-2">
+        <label for="firstName">Voornaam</label>
+        <input id="firstName" type="text" formControlName="firstName" placeholder="voornaam" />
+      </div>
+      <div class="col-3">
+        <label for="lastName">Familienaam</label>
+        <input id="lastName" type="text" formControlName="lastName" placeholder="familienaam" />
+      </div>
+    </div>
+    <div class="row row-space mt-2">
+      <div class="col-4">
+        <label for="street">Straat</label>
+        <input id="street" type="text" formControlName="street" placeholder="straat" />
+      </div>
+      <div class="col-1">
+        <label for="number">Huisnummer</label>
+        <input id="number" type="text" formControlName="number" placeholder="huisnummer" />
+      </div>
+    </div>
+    <div class="row row-space mt-2">
+      <div class="col-2">
+        <label for="postalCode">Postcode</label>
+        <input id="postalCode" type="text" inputmode="numeric" pattern="[0-9]*"
+               maxlength="4"
+               formControlName="postalCode" placeholder="postcode"
+               [class.is-invalid]="searchForm.get('postalCode')?.invalid && searchForm.get('postalCode')?.touched"/>
+
+        @if (searchForm.get('postalCode')?.errors?.['pattern'] && searchForm.get('postalCode')?.touched) {
+          <div class="text-danger mt-1">
+            <small style="color: red">Warning: Please enter numbers only.</small>
+          </div>
+        }
+      </div>
+
+      <div class="col-3">
+        <label for="city">Gemeente</label>
+        <input id="city" type="text" formControlName="city" placeholder="gemeente" />
+      </div>
+    </div>
+
+    <div class="btn-group mt-3" role="group">
+      <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="searchForm.pristine">Zoek op</button>
+      <button type="reset" class="btn btn-outline-secondary" (click)="searchForm.reset()">Reset</button>
+    </div>
+
+  </form>
+
+  @if (submissions.length > 0) {
+    <div class="mt-3">
+      <table class="user-table">
+        <thead>
+        <tr>
+          <th>First name</th>
+          <th>Last name</th>
+          <th>Street</th>
+          <th>Number</th>
+          <th>Postal Code</th>
+          <th>City</th>
+          <th>Country</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (user of submissions; track user.lastName) {
+            <tr>
+              <td>{{ user.firstName }}</td>
+              <td>{{ user.lastName }}</td>
+              <td>{{ user.street }}</td>
+              <td>{{ user.number }}</td>
+              <td>{{ user.postalCode }}</td>
+              <td>{{ user.city }}</td>
+              <td>{{ user.country }}</td>
+            </tr>
+
+          } @empty {
+            <tr>
+              <td colspan="5" style="text-align: center">Nothing found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+
+</section>

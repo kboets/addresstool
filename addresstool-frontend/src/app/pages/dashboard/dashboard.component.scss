@@ -1,0 +1,44 @@
+/* Simple layout to place First name and Last name next to each other */
+.address-form {
+  .row-2 {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: nowrap; /* keep on one row as per requirement */
+
+    .col {
+      /* Each column takes 30% of the total width (30-30), leaving 40% empty */
+      flex: 0 0 30%;
+      max-width: 30%;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 12px;
+  }
+
+  label {
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  button[type='submit'] {
+    margin-top: 8px;
+    padding: 8px 14px;
+  }
+
+  button[type='reset'] {
+    margin-top: 8px;
+    padding: 8px 14px;
+  }
+}
