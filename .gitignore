@@ -1,2 +1,13 @@
 # Project exclude paths
 /addresstool-api/target/
+/addresstool-api/.mvn/wrapper/maven-wrapper.properties
+/addresstool-frontend/.browserslistrc
+/addresstool-frontend/.editorconfig
+/addresstool-frontend/public/browserconfig.xml
+/addresstool-frontend/docs/coding-style.md
+/addresstool-frontend/docs/dependencies.md
+/addresstool-frontend/public/manifest.webmanifest
+/addresstool-api/mvnw
+/addresstool-api/mvnw.cmd
+/addresstool-frontend/public/robots.txt
+/addresstool-frontend/docs/setup.md
