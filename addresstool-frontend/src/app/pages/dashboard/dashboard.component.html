@@ -40,8 +40,28 @@
 
       <div class="col-3">
         <label for="city">Gemeente</label>
-        <input id="city" type="text" formControlName="city" placeholder="gemeente" />
+
+        <input id="city"
+               type="text"
+               formControlName="city"
+               class="form-control"
+               autocomplete="off"
+               [attr.list]="'cityList-' + cities().length" />
+
+        <datalist [id]="'cityList-' + cities().length">
+          @for (cityName of cities(); track cityName) {
+            <option [value]="cityName"></option>
+          }
+        </datalist>
       </div>
+
+
+
+      <!--      <div class="col-3">-->
+<!--        <label for="city">Gemeente</label>-->
+<!--        <input id="city" type="text" formControlName="city" placeholder="gemeente" />-->
+<!--      </div>-->
+
     </div>
 
     <div class="btn-group mt-3" role="group">

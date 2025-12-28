@@ -2,5 +2,5 @@
 GET http://localhost:8080/addresstool/api/cityByPostalCode/3500
 ##
 ### GET city names by postalCode
-GET http://localhost:8080/addresstool/api/cityNamesByPostalCode/3501
+GET http://localhost:8080/addresstool/api/cityNamesByPostalCode/2000
 ##

@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -10,11 +10,13 @@ import {AddressService} from "@shared/services/address-service";
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss', '../users/list/list.component.scss'],
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
-  searchForm: FormGroup;
+  // cities names
+  cities = this.addressService.cities;
 
+  searchForm: FormGroup;
   // Results of the search
   submissions: Array<{
     firstName: string;
@@ -83,4 +85,6 @@ export class DashboardComponent {
     const postalCode = this.searchForm.get('postalCode')?.value;
     this.addressService.postalCodeSelected(+postalCode)
   }
+
+  protected readonly event = event;
 }

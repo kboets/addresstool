@@ -26,7 +26,7 @@ class AddressControllerTest {
 
     @Test
     @DisplayName( "GET /cityByPostalCode - should return all cities with zipcode")
-    void findByZipCode() {
+    void findByPostalCode_givenValidPostalCode() {
         var cities = List.of(
                 new City(null, "Hasselt", "3500", true),
                 new City(null, "Wimmertingen", "3501", false),

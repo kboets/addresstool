@@ -3,6 +3,7 @@ import {HttpClient} from "@angular/common/http";
 import {filter, Observable, switchMap} from "rxjs";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {shareReplay, tap} from "rxjs/operators";
+import {HttpErrorService} from "@core/services/http-error.service";
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +12,8 @@ export class AddressService {
 
   private baseUrl = "/addresstool/api";
   private http = inject(HttpClient);
+  private errorService = inject(HttpErrorService);
+
   constructor() { }
 
   // selected postal code signal
@@ -22,7 +25,7 @@ export class AddressService {
   }
 
   // get cities from zipcode
-  readonly cities$ = toObservable(this.selectedPostalCode)
+  private cities$ = toObservable(this.selectedPostalCode)
     .pipe(
       filter(zipCode => !!zipCode),
       tap(zipCode => console.log("before the call to the backend: " + zipCode)),
@@ -36,7 +39,6 @@ export class AddressService {
     return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`)
       .pipe(
         tap(cities => console.log(cities)));
-        //shareReplay(1));
   }
 
 
