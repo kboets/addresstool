@@ -7,11 +7,12 @@ import {HttpErrorResponse} from "@angular/common/http";
 export class HttpErrorService {
 
   formatError(err: HttpErrorResponse): string {
+    console.error('format error ', err);
     return this.httpErrorFormatter(err);
   }
 
   private httpErrorFormatter(err: HttpErrorResponse): string {
-    let errorMessage = '';
+    let errorMessage:string;
     if (err.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       errorMessage = `An error occurred: ${err.error.message}`;

@@ -1,9 +1,10 @@
-import {inject, Injectable, signal} from "@angular/core";
+import {computed, inject, Injectable, signal} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {filter, Observable, switchMap} from "rxjs";
+import {filter, map, Observable, of, switchMap} from "rxjs";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
-import {shareReplay, tap} from "rxjs/operators";
+import {catchError, shareReplay, tap} from "rxjs/operators";
 import {HttpErrorService} from "@core/services/http-error.service";
+import {Result} from "@core/entities/result";
 
 @Injectable({
   providedIn: 'root',
@@ -25,15 +26,23 @@ export class AddressService {
   }
 
   // get cities from zipcode
-  private cities$ = toObservable(this.selectedPostalCode)
+  private cityNamesResult$ = toObservable(this.selectedPostalCode)
     .pipe(
       filter(zipCode => !!zipCode),
       tap(zipCode => console.log("before the call to the backend: " + zipCode)),
       switchMap(zipCode => this.getCities(zipCode)),
-      shareReplay(1)
+      shareReplay(1),
+      catchError(error => of({
+        data: undefined,
+        error: this.errorService.formatError(error)
+      } as Result<string[]>)),
+      map(cities => ({data: cities} as Result<string[]>))
     );
 
-  cities = toSignal(this.cities$, {initialValue: []});
+  private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: []}});
+  cityNames = computed(() => this.cityNamesResult()?.data);
+  cityNamesError = computed(() => this.cityNamesResult()?.error);
+
 
   private getCities(zipCode: number): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`)

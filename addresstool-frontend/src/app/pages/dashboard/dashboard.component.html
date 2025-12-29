@@ -1,6 +1,11 @@
 
 <section class="main-container">
   <h2 translate>Zoek scherm</h2>
+  @if (cityNamesError()) {
+    <ng-container>
+      <div class="alert alert-danger">{{cityNamesError()}}</div>
+    </ng-container>
+  }
 
   <form [formGroup]="searchForm" class="address-form">
     <div class="row row-space mt-2">
@@ -46,10 +51,10 @@
                formControlName="city"
                class="form-control"
                autocomplete="off"
-               [attr.list]="'cityList-' + cities().length" />
+               [attr.list]="'cityList-' + cityNames().length" />
 
-        <datalist [id]="'cityList-' + cities().length">
-          @for (cityName of cities(); track cityName) {
+        <datalist [id]="'cityList-' + cityNames().length">
+          @for (cityName of cityNames(); track cityName) {
             <option [value]="cityName"></option>
           }
         </datalist>

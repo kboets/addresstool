@@ -14,7 +14,8 @@ export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
   // cities names
-  cities = this.addressService.cities;
+  cityNames = this.addressService.cityNames;
+  cityNamesError = this.addressService.cityNamesError;
 
   searchForm: FormGroup;
   // Results of the search
