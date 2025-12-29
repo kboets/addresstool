@@ -21,22 +21,30 @@ export class AddressService {
   selectedPostalCode = signal<number>(undefined);
   // set the selected postal code when given
   public postalCodeSelected(zipCode: number) {
-    console.log("postal code selected: " + zipCode);
     this.selectedPostalCode.set(zipCode);
+  }
+
+  public resetPostalCode() {
+    this.selectedPostalCode.set(undefined);
   }
 
   // get cities from zipcode
   private cityNamesResult$ = toObservable(this.selectedPostalCode)
     .pipe(
-      filter(zipCode => !!zipCode),
-      tap(zipCode => console.log("before the call to the backend: " + zipCode)),
-      switchMap(zipCode => this.getCities(zipCode)),
-      shareReplay(1),
-      catchError(error => of({
-        data: undefined,
-        error: this.errorService.formatError(error)
-      } as Result<string[]>)),
-      map(cities => ({data: cities} as Result<string[]>))
+      //tap(zipCode => console.log("before the call to the backend: " + zipCode)),
+      switchMap(zipCode => {
+        if (!zipCode) {
+          return of({data: [], error: undefined} as Result<string[]>);
+        }
+        return this.getCities(zipCode).pipe(
+            map(cities => ({data: cities} as Result<string[]>)),
+            catchError(error => of({
+              data: undefined,
+              error: this.errorService.formatError(error)
+            } as Result<string[]>)),
+          )
+      }),
+      shareReplay(1)
     );
 
   private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: []}});
@@ -45,9 +53,7 @@ export class AddressService {
 
 
   private getCities(zipCode: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`)
-      .pipe(
-        tap(cities => console.log(cities)));
+    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`);
   }
 
 

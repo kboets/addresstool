@@ -49,15 +49,7 @@ export class DashboardComponent implements OnInit {
     this.onPostalCodeChange();
   }
 
-  private onPostalCodeChange(): void {
-    this.searchForm.get('postalCode')?.statusChanges.subscribe((status) => {
-      if (status === 'VALID') {
-        this.getCities();
-      }
-    });
-  }
-
-  private initForm(): void {
+  public initForm(): void {
     this.searchForm.setValue({
       firstName: '',
       lastName: '',
@@ -67,7 +59,18 @@ export class DashboardComponent implements OnInit {
       city: '',
       country: '',
     });
+    this.addressService.resetPostalCode();
   }
+
+  private onPostalCodeChange(): void {
+    this.searchForm.get('postalCode')?.statusChanges.subscribe((status) => {
+      if (status === 'VALID') {
+        this.getCities();
+      }
+    });
+  }
+
+
 
   onSubmit(): void {
     console.log(this.searchForm.value);

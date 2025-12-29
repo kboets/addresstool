@@ -1,11 +1,12 @@
 
 <section class="main-container">
-  <h2 translate>Zoek scherm</h2>
   @if (cityNamesError()) {
-    <ng-container>
-      <div class="alert alert-danger">{{cityNamesError()}}</div>
-    </ng-container>
+    <div class="text-danger mt-1">
+      <div style="color: red" class="alert alert-danger">{{cityNamesError()}}</div>
+  </div>
   }
+
+  <h2 translate>Zoek scherm</h2>
 
   <form [formGroup]="searchForm" class="address-form">
     <div class="row row-space mt-2">
@@ -51,27 +52,19 @@
                formControlName="city"
                class="form-control"
                autocomplete="off"
-               [attr.list]="'cityList-' + cityNames().length" />
+               [attr.list]="'cityList-' + cityNames()?.length" />
 
-        <datalist [id]="'cityList-' + cityNames().length">
+        <datalist [id]="'cityList-' + cityNames()?.length">
           @for (cityName of cityNames(); track cityName) {
             <option [value]="cityName"></option>
           }
         </datalist>
       </div>
-
-
-
-      <!--      <div class="col-3">-->
-<!--        <label for="city">Gemeente</label>-->
-<!--        <input id="city" type="text" formControlName="city" placeholder="gemeente" />-->
-<!--      </div>-->
-
     </div>
 
     <div class="btn-group mt-3" role="group">
       <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="searchForm.pristine">Zoek op</button>
-      <button type="reset" class="btn btn-outline-secondary" (click)="searchForm.reset()">Reset</button>
+      <button type="reset" class="btn btn-outline-secondary" (click)="initForm()">Reset</button>
     </div>
 
   </form>
