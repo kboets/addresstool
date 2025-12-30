@@ -3,8 +3,8 @@ spring:
     web-application-type: servlet
   datasource:
     url: jdbc:postgresql://localhost:5432/addresstool?createDatabaseIfNotExist=true
-    username: kboets
-    password: kubo1601
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none

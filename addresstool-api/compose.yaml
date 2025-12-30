@@ -3,8 +3,8 @@ services:
       container_name: addresstool-postgres
       image: postgres:16.11-alpine3.23
       environment:
-        POSTGRES_USER: kboets
-        POSTGRES_PASSWORD: kubo1601
+        POSTGRES_USER: ${DB_USERNAME}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
         PGDATA: /data/postgres
       volumes:
         - postgres:/data/postgres
