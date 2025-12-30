@@ -43,6 +43,23 @@ class AddressControllerTest {
     }
 
     @Test
+    @DisplayName( "GET /api/cityByName - should return all cities for the given name")
+    void cityByName_givenValidCityName() {
+        var cities = List.of(
+                new City(null, "Averbode", "3271", false)
+        );
+        when(addressService.findByCityName(any())).thenReturn(cities);
+
+        restTestClient.get().uri("/api/cityByName/Averbode").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$[0].name").isEqualTo("Averbode")
+                .jsonPath("$[0].postalCode").isEqualTo("3271");
+    }
+
+    @Test
     @DisplayName( "GET /api/cityNamesByPostalCode - should return all city names for the given zipcode")
     void findCityNamesByPostalCode_givenValidPostalCode() {
         var cities = List.of(
