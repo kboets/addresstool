@@ -48,4 +48,19 @@ class AddressServiceTest {
         assertEquals(0, cities.size());
     }
 
+    @Test
+    void givenValidCity_findByCityName_shouldReturnListOfCities() {
+        // create a list of city responses
+        List<CityResponse> cityResponses = List.of(
+                new CityResponse(
+                        new CityResponse.PostcodeData("3271", "Averbode", "Scherpenheuvel-Zichem")
+                )
+        );
+        when(cityClientService.findByCityName(any())).thenReturn(cityResponses);
+        List<City> cities = addressService.findByCityName("averbode");
+        assertEquals(1, cities.size());
+        assertThat(cities.getFirst()).isEqualTo(new City(null, "Averbode", "3271", false));
+    }
+
+
 }

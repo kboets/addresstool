@@ -27,11 +27,22 @@ public class AddressController {
         return ResponseEntity.ok(addressService.findByZipCode(postcode));
     }
 
+    @GetMapping("/cityByName/{cityName}")
+    public ResponseEntity<List<City>> findByCityName(@PathVariable String cityName) {
+        return ResponseEntity.ok(addressService.findByCityName(cityName));
+    }
+
     @GetMapping("/cityNamesByPostalCode/{postcode}")
     public ResponseEntity<List<String>> findCityNamesByPostalCode(@PathVariable String postcode) {
         List<City> cities = addressService.findByZipCode(postcode);
         Set<String> cityNames = new HashSet<>(cities.stream().map(City::name).toList());
         return ResponseEntity.ok(new ArrayList<>(cityNames));
+    }
+
+    @GetMapping("/postalCodeByCityName/{cityName}")
+    public ResponseEntity<String> findPostalCodeByCityName(@PathVariable String cityName) {
+        List<City> cities = addressService.findByCityName(cityName);
+        return ResponseEntity.ok(cities.getFirst().postalCode());
     }
 
 }

@@ -60,4 +60,17 @@ class AddressControllerTest {
                 .jsonPath("$[0]").isEqualTo("Hasselt");
     }
 
+    @Test
+    @DisplayName( "GET /api/postalCodeByCityName - should return zipcode for the given city name")
+    void findPostalCodeByCityName_givenValidCityName() {
+        var cities = List.of(
+                new City(null, "Averbode", "3271", false)
+        );
+        when(addressService.findByCityName(any())).thenReturn(cities);
+
+        restTestClient.get().uri("/api/postalCodeByCityName/Averbode").exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("$").isEqualTo("3271");
+    }
 }

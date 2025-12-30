@@ -23,4 +23,13 @@ public class CityClientService {
                 .body(new ParameterizedTypeReference<>() {
                 });
     }
+
+    public List<CityResponse> findByCityName(String cityName) {
+        return restClient
+                .get()
+                .uri("/{postcode}.json", cityName)
+                .retrieve()
+                .body(new ParameterizedTypeReference<>() {
+                });
+    }
 }
