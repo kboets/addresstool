@@ -1,9 +1,36 @@
 services:
-  postgres:
-    image: 'postgres:latest'
+  db:
+      container_name: addresstool-postgres
+      image: postgres:16.11-alpine3.23
+      environment:
+        POSTGRES_USER: kboets
+        POSTGRES_PASSWORD: kubo1601
+        PGDATA: /data/postgres
+      volumes:
+        - postgres:/data/postgres
+      ports:
+        - "5432:5432"
+      networks:
+        - postgres
+      restart: unless-stopped
+
+  addresstool-api:
+    container_name: addresstool-api
+    image: kubo1601/addresstool-api
     environment:
-      - 'POSTGRES_DB=mydatabase'
-      - 'POSTGRES_PASSWORD=secret'
-      - 'POSTGRES_USER=myuser'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/addresstool
     ports:
-      - '5432'
+      - "8089:8080"
+    networks:
+      - postgres
+    depends_on:
+      - db
+    restart: unless-stopped
+
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres:

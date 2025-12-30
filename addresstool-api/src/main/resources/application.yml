@@ -1,0 +1,36 @@
+spring:
+  main:
+    web-application-type: servlet
+  datasource:
+    url: jdbc:postgresql://localhost:5432/addresstool?createDatabaseIfNotExist=true
+    username: kboets
+    password: kubo1601
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+  application:
+    name: addresstool
+  flyway:
+    enabled: false
+    encoding: UTF-8
+  docker:
+    compose:
+      file: compose.yaml
+
+
+server:
+  servlet:
+    context-path: /addresstool
+  port: 8080
+
+
+logging:
+  level:
+    root: INFO
+    be.boets: DEBUG
+

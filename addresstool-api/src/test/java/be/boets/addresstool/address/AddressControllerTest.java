@@ -25,7 +25,7 @@ class AddressControllerTest {
     private AddressService addressService;
 
     @Test
-    @DisplayName( "GET /cityByPostalCode - should return all cities with zipcode")
+    @DisplayName( "GET /api/cityByPostalCode - should return all cities for the given zipcode")
     void findByPostalCode_givenValidPostalCode() {
         var cities = List.of(
                 new City(null, "Hasselt", "3500", true),
@@ -34,12 +34,30 @@ class AddressControllerTest {
         );
         when(addressService.findByZipCode(any())).thenReturn(cities);
 
-        restTestClient.get().uri("/cityByZipCode/3500").exchange()
+        restTestClient.get().uri("/api/cityByPostalCode/3500").exchange()
                 .expectStatus().isOk()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
                 .expectBody()
                 .jsonPath("$").isArray()
                 .jsonPath("$[0].name").isEqualTo("Hasselt");
+    }
+
+    @Test
+    @DisplayName( "GET /api/cityNamesByPostalCode - should return all city names for the given zipcode")
+    void findCityNamesByPostalCode_givenValidPostalCode() {
+        var cities = List.of(
+                new City(null, "Hasselt", "3500", true),
+                new City(null, "Wimmertingen", "3501", false),
+                new City(null, "Kermt", "3510", false)
+        );
+        when(addressService.findByZipCode(any())).thenReturn(cities);
+
+        restTestClient.get().uri("/api/cityNamesByPostalCode/3500").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$[0]").isEqualTo("Hasselt");
     }
 
 }

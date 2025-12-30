@@ -62,16 +62,18 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- end spring boot dependencies -->
+
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-database-postgresql</artifactId>
 		</dependency>
-
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+		<!-- test  -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -90,6 +92,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>addresstool</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
