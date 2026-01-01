@@ -1,6 +1,6 @@
 import {computed, inject, Injectable, signal} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {filter, map, Observable, of, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap} from "rxjs";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {catchError, shareReplay, tap} from "rxjs/operators";
 import {HttpErrorService} from "@core/services/http-error.service";
@@ -17,18 +17,18 @@ export class AddressService {
 
   constructor() { }
 
+  // ** retrieve city names via postal code ** //
+
   // selected postal code signal
   selectedPostalCode = signal<number>(undefined);
   // set the selected postal code when given
   public postalCodeSelected(zipCode: number) {
     this.selectedPostalCode.set(zipCode);
   }
-
   public resetPostalCode() {
     this.selectedPostalCode.set(undefined);
   }
-
-  // get cities from zipcode
+  // retrieve all cities from zipcode
   private cityNamesResult$ = toObservable(this.selectedPostalCode)
     .pipe(
       //tap(zipCode => console.log("before the call to the backend: " + zipCode)),
@@ -47,15 +47,52 @@ export class AddressService {
       shareReplay(1)
     );
 
-  private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: []}});
+  private getCities(zipCode: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`);
+  }
+  private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: [], error: undefined}});
   cityNames = computed(() => this.cityNamesResult()?.data);
   cityNamesError = computed(() => this.cityNamesResult()?.error);
 
 
-  private getCities(zipCode: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`);
+  // ****** retrieve postal code via city name ****** //
+
+  //selected city name
+  selectedCityName = signal<string>(undefined);
+  // set the selected city name when given
+  public cityNameSelected(cityName: string) {
+    this.selectedCityName.set(cityName);
+  }
+  public resetCityName() {
+    this.selectedCityName.set(undefined);
   }
 
+  //get postal code from city name
+  private postalCodeResult$ = toObservable(this.selectedCityName)
+    .pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(cityName => {
+        if (!cityName) {
+          return of({data: undefined, error: undefined} as Result<string>);
+        }
+        return this.getPostalCode(cityName).pipe(
+            map(postalCode => ({data: postalCode} as Result<string>)),
+            catchError(error => of({
+              data: undefined,
+              error: this.errorService.formatError(error)
+            } as Result<string>)),
+        )
+      }),
+      shareReplay(1)
+    );
+  private postalCodeResult = toSignal(this.postalCodeResult$, {initialValue: {data: '', error: undefined}})
+  postalCode = computed(() => this.postalCodeResult().data);
+  postalCodeError = computed(() => this.postalCodeResult()?.error);
+
+  private getPostalCode(cityName: string) : Observable<string> {
+    return this.http.get<string>(`${this.baseUrl}/postalCodeByCityName/${cityName}`);
+  }
 
 
 }

@@ -51,6 +51,7 @@
                type="text"
                formControlName="city"
                class="form-control"
+               (input)="onCitySelected($event)"
                autocomplete="off"
                [attr.list]="'cityList-' + cityNames()?.length" />
 

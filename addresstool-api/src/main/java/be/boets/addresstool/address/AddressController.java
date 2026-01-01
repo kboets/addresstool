@@ -42,6 +42,11 @@ public class AddressController {
     @GetMapping("/postalCodeByCityName/{cityName}")
     public ResponseEntity<String> findPostalCodeByCityName(@PathVariable String cityName) {
         List<City> cities = addressService.findByCityName(cityName);
+        for(City city : cities) {
+            if (city.name().equalsIgnoreCase(cityName)) {
+                return ResponseEntity.ok(city.postalCode());
+            }
+        }
         return ResponseEntity.ok(cities.getFirst().postalCode());
     }
 

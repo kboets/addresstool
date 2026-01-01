@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, effect, inject, OnInit} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -16,6 +16,9 @@ export class DashboardComponent implements OnInit {
   // cities names
   cityNames = this.addressService.cityNames;
   cityNamesError = this.addressService.cityNamesError;
+  // postal code error
+  postalCode = this.addressService.postalCode;
+  postalCodeError = this.addressService.postalCodeError;
 
   searchForm: FormGroup;
   // Results of the search
@@ -42,6 +45,13 @@ export class DashboardComponent implements OnInit {
       city: [''],
       country: [''],
     });
+
+    effect(() => {
+      const code = this.postalCode();
+      if (code) {
+        this.searchForm.get('postalCode')?.setValue(code, {emitEvent: false});
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -65,12 +75,23 @@ export class DashboardComponent implements OnInit {
   private onPostalCodeChange(): void {
     this.searchForm.get('postalCode')?.statusChanges.subscribe((status) => {
       if (status === 'VALID') {
-        this.getCities();
+        this.getCityNames();
       }
     });
+    this.searchForm.get('postalCode')?.valueChanges.subscribe((value) => {
+      if (this.searchForm.get('city')?.value !== undefined && this.searchForm.get('city')?.value !== '') {
+        this.searchForm.patchValue({city: ''});
+      }
+    })
   }
 
-
+  onCitySelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const cityName = input.value;
+    if (cityName) {
+      this.addressService.cityNameSelected(cityName);
+    }
+  }
 
   onSubmit(): void {
     console.log(this.searchForm.value);
@@ -84,8 +105,7 @@ export class DashboardComponent implements OnInit {
     };
   }
 
-  private getCities() {
-    //console.log('before getCities -> postal code is valid');
+  private getCityNames() {
     const postalCode = this.searchForm.get('postalCode')?.value;
     this.addressService.postalCodeSelected(+postalCode)
   }
