@@ -20,7 +20,7 @@ spring:
     encoding: UTF-8
   docker:
     compose:
-      file: compose.yaml
+      file: docker-compose.yaml
 
 
 server:

@@ -1,0 +1,47 @@
+services:
+  db:
+      container_name: addresstool-postgres
+      image: postgres:16.11-alpine3.23
+      env_file:
+        - secret.env
+      environment:
+        POSTGRES_USER: ${DB_USERNAME}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+        POSTGRES_DB: addresstool
+        PGDATA: /data/postgres
+      volumes:
+        - db:/data/postgres
+      ports:
+        - "5432:5432"
+      networks:
+        - postgres
+      restart: unless-stopped
+
+  addresstool:
+    container_name: addresstool
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: kubo1601/addresstool-api
+    env_file:
+      - secret.env
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/addresstool
+      # no longer needed, used the env_file to do so
+      #SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      #SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "8089:8080"
+    networks:
+      - postgres
+    depends_on:
+      - db
+    restart: unless-stopped
+
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  db:

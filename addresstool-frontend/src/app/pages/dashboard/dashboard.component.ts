@@ -13,10 +13,10 @@ import {AddressService} from "@shared/services/address-service";
 export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
-  // cities names
+  // cities name signals
   cityNames = this.addressService.cityNames;
   cityNamesError = this.addressService.cityNamesError;
-  // postal code error
+  // postal code signals
   postalCode = this.addressService.postalCode;
   postalCodeError = this.addressService.postalCodeError;
 

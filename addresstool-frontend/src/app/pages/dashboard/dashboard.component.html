@@ -5,6 +5,11 @@
       <div style="color: red" class="alert alert-danger">{{cityNamesError()}}</div>
   </div>
   }
+  @if (postalCodeError()) {
+      <div class="text-danger mt-1">
+        <div style="color: red" class="alert alert-danger">{{postalCodeError()}}</div>
+      </div>
+  }
 
   <h2 translate>Zoek scherm</h2>
 
