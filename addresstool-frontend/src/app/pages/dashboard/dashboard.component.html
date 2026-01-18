@@ -3,12 +3,12 @@
   @if (cityNamesError()) {
     <div class="text-danger mt-1">
       <div style="color: red" class="alert alert-danger">{{cityNamesError()}}</div>
-  </div>
+    </div>
   }
   @if (postalCodeError()) {
-      <div class="text-danger mt-1">
-        <div style="color: red" class="alert alert-danger">{{postalCodeError()}}</div>
-      </div>
+    <div class="text-danger mt-1">
+      <div style="color: red" class="alert alert-danger">{{postalCodeError()}}</div>
+    </div>
   }
 
   <h2 translate>Zoek scherm</h2>
@@ -17,41 +17,17 @@
     <div class="row row-space mt-2">
       <div class="col-2">
         <label for="firstName">Voornaam</label>
-        <input id="firstName" type="text" formControlName="firstName" placeholder="voornaam" />
+        <input id="firstName" type="text" formControlName="firstName"  />
       </div>
       <div class="col-3">
         <label for="lastName">Familienaam</label>
-        <input id="lastName" type="text" formControlName="lastName" placeholder="familienaam" />
+        <input id="lastName" type="text" formControlName="lastName"  />
       </div>
     </div>
+    <!-- gemeente + postcode -->
     <div class="row row-space mt-2">
       <div class="col-4">
-        <label for="street">Straat</label>
-        <input id="street" type="text" formControlName="street" placeholder="straat" />
-      </div>
-      <div class="col-1">
-        <label for="number">Huisnummer</label>
-        <input id="number" type="text" formControlName="number" placeholder="huisnummer" />
-      </div>
-    </div>
-    <div class="row row-space mt-2">
-      <div class="col-2">
-        <label for="postalCode">Postcode</label>
-        <input id="postalCode" type="text" inputmode="numeric" pattern="[0-9]*"
-               maxlength="4"
-               formControlName="postalCode" placeholder="postcode"
-               [class.is-invalid]="searchForm.get('postalCode')?.invalid && searchForm.get('postalCode')?.touched"/>
-
-        @if (searchForm.get('postalCode')?.errors?.['pattern'] && searchForm.get('postalCode')?.touched) {
-          <div class="text-danger mt-1">
-            <small style="color: red">Warning: Please enter numbers only.</small>
-          </div>
-        }
-      </div>
-
-      <div class="col-3">
         <label for="city">Gemeente</label>
-
         <input id="city"
                type="text"
                formControlName="city"
@@ -65,6 +41,30 @@
             <option [value]="cityName"></option>
           }
         </datalist>
+      </div>
+      <div class="col-1">
+        <label for="postalCode">Postcode</label>
+        <input id="postalCode" type="text" inputmode="numeric" pattern="[0-9]*"
+               maxlength="4"
+               formControlName="postalCode" placeholder="1234"
+               [class.is-invalid]="searchForm.get('postalCode')?.invalid && searchForm.get('postalCode')?.touched"/>
+
+        @if (searchForm.get('postalCode')?.errors?.['pattern'] && searchForm.get('postalCode')?.touched) {
+          <div class="text-danger mt-1">
+            <small style="color: red">Warning: Please enter numbers only.</small>
+          </div>
+        }
+      </div>
+    </div>
+    <!-- straat + huisnummer -->
+    <div class="row row-space mt-2">
+      <div class="col-4">
+        <label for="street">Straat</label>
+        <input id="street" type="text" formControlName="street"  />
+      </div>
+      <div class="col-1">
+        <label for="number">Huisnummer</label>
+        <input id="number" type="text" formControlName="number"  />
       </div>
     </div>
 

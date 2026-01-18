@@ -6,6 +6,9 @@ GET http://localhost:8089/addresstool/api/cityByPostalCode/3500
 GET http://localhost:8080/addresstool/api/cityNamesByPostalCode/2000
 ### GET cities by name
 GET http://localhost:8080/addresstool/api/cityByName/Averbode
-### GET pstal code by name
+### GET postal code by name
 GET http://localhost:8080/addresstool/api/postalCodeByCityName/Averbode
-###
+### GET streets by postalcode
+GET http://localhost:8080/addresstool/api/streetByPostalCode/3271
+### GET streets by city
+GET http://localhost:8080/addresstool/api/streetByCity/Averbode

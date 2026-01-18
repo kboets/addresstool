@@ -1,5 +1,6 @@
 package be.boets.addresstool.address;
 
+import be.boets.addresstool.address.client.StreetClientService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,9 +18,11 @@ public class AddressController {
 
 
     private final AddressService addressService;
+    private final StreetClientService streetClientService;
 
-    public AddressController(AddressService addressService) {
+    public AddressController(AddressService addressService, StreetClientService streetClientService) {
         this.addressService = addressService;
+        this.streetClientService = streetClientService;
     }
 
     @GetMapping("/cityByPostalCode/{postcode}")
@@ -32,9 +35,9 @@ public class AddressController {
         return ResponseEntity.ok(addressService.findByCityName(cityName));
     }
 
-    @GetMapping("/cityNamesByPostalCode/{postcode}")
-    public ResponseEntity<List<String>> findCityNamesByPostalCode(@PathVariable String postcode) {
-        List<City> cities = addressService.findByZipCode(postcode);
+    @GetMapping("/cityNamesByPostalCode/{postalCode}")
+    public ResponseEntity<List<String>> findCityNamesByPostalCode(@PathVariable String postalCode) {
+        List<City> cities = addressService.findByZipCode(postalCode);
         Set<String> cityNames = new HashSet<>(cities.stream().map(City::name).toList());
         return ResponseEntity.ok(new ArrayList<>(cityNames));
     }
@@ -48,6 +51,16 @@ public class AddressController {
             }
         }
         return ResponseEntity.ok(cities.getFirst().postalCode());
+    }
+
+    @GetMapping("/streetByPostalCode/{postalCode}")
+    public ResponseEntity<List<String>> findStreetByPostalCode(@PathVariable String postalCode) {
+        return ResponseEntity.ok(streetClientService.findByPostalCode(postalCode));
+    }
+
+    @GetMapping("/streetByCity/{city}")
+    public ResponseEntity<List<String>> findStreetByCity(@PathVariable String city) {
+        return ResponseEntity.ok(streetClientService.findByCityName(city));
     }
 
 }
