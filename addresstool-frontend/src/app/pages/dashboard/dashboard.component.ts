@@ -20,6 +20,9 @@ export class DashboardComponent implements OnInit {
   // postal code signals
   postalCode = this.addressService.postalCode;
   postalCodeError = this.addressService.postalCodeError;
+  // street
+  streetNames = this.addressService.streets;
+  streetNamesError = this.addressService.streetsError;
 
   searchForm: FormGroup;
   // Results of the search
@@ -65,7 +68,7 @@ export class DashboardComponent implements OnInit {
       )
       .subscribe((value) => {
       if (value !== undefined && value !== '') {
-        console.log('city changed -> ', value);
+        //console.log('city changed -> ', value);
         //this.searchForm.patchValue({postalCode: ''});
         //this.addressService.resetPostalCode();
         //this.addressService.resetCityName();
@@ -84,6 +87,8 @@ export class DashboardComponent implements OnInit {
       country: '',
     });
     this.addressService.resetPostalCode();
+    this.addressService.resetCityName();
+
   }
 
   private onPostalCodeChange(): void {
@@ -120,6 +125,7 @@ export class DashboardComponent implements OnInit {
 
   private getCityNames() {
     const postalCode = this.searchForm.get('postalCode')?.value;
+    console.log('component -> getCityNames: ', postalCode);
     this.addressService.postalCodeSelected(+postalCode)
   }
 

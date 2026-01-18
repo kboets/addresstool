@@ -1,8 +1,8 @@
 import {computed, inject, Injectable, signal} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, map, merge, Observable, of, switchMap} from "rxjs";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
-import {catchError, shareReplay, tap} from "rxjs/operators";
+import {catchError, shareReplay} from "rxjs/operators";
 import {HttpErrorService} from "@core/services/http-error.service";
 import {Result} from "@core/entities/result";
 
@@ -47,13 +47,13 @@ export class AddressService {
       shareReplay(1)
     );
 
-  private getCities(zipCode: number): Observable<string[]> {
-    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`);
-  }
   private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: [], error: undefined}});
   cityNames = computed(() => this.cityNamesResult()?.data);
   cityNamesError = computed(() => this.cityNamesResult()?.error);
 
+  private getCities(zipCode: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/cityNamesByPostalCode/${zipCode}`);
+  }
 
   // ****** retrieve postal code via city name ****** //
 
@@ -94,5 +94,39 @@ export class AddressService {
     return this.http.get<string>(`${this.baseUrl}/postalCodeByCityName/${cityName}`);
   }
 
+
+  // ****** retrieve street name with postal code or city name ****** //
+  private streetsResult$ = merge(
+    toObservable(this.selectedPostalCode).pipe(map(zip => ({ zip }))),
+    toObservable(this.selectedCityName).pipe(map(city => ({ city })))
+  )
+    .pipe(
+      debounceTime(300),
+      switchMap((criteria: { zip?: number, city?: string }) => {
+        if (criteria.zip) {
+          return this.getStreetNamesByPostalCode(criteria.zip);
+        } else if (criteria.city) {
+          return this.getStreetNamesByCityName(criteria.city);
+        }
+        return of([]);
+      }),
+      map(streets => ({data: streets} as Result<string[]>)),
+      catchError(error => of({
+        data: undefined,
+        error: this.errorService.formatError(error)
+      } as Result<string[]>)),
+      shareReplay(1)
+    );
+
+  private streetsResult = toSignal(this.streetsResult$, {initialValue: {data: [], error: undefined}});
+  streets = computed(() => this.streetsResult()?.data);
+  streetsError = computed(() => this.streetsResult()?.error);
+
+  private getStreetNamesByPostalCode(postalCode: number): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/streetByPostalCode/${postalCode}`);
+  }
+  private getStreetNamesByCityName(cityName: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/streetByCity/${cityName}`);
+  }
 
 }

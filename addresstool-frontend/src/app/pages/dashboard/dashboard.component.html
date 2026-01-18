@@ -10,6 +10,11 @@
       <div style="color: red" class="alert alert-danger">{{postalCodeError()}}</div>
     </div>
   }
+  @if (streetNamesError()) {
+    <div class="text-danger mt-1">
+      <div style="color: red" class="alert alert-danger">{{streetNamesError()}}</div>
+    </div>
+  }
 
   <h2 translate>Zoek scherm</h2>
 
@@ -60,7 +65,19 @@
     <div class="row row-space mt-2">
       <div class="col-4">
         <label for="street">Straat</label>
-        <input id="street" type="text" formControlName="street"  />
+        <input id="city"
+               type="text"
+               formControlName="street"
+               class="form-control"
+               autocomplete="off"
+               [attr.list]="'streetList-' + streetNames()?.length" />
+
+        <datalist [id]="'streetList-' + streetNames()?.length">
+          @for (streetName of streetNames(); track streetName) {
+            <option [value]="streetName"></option>
+          }
+        </datalist>
+<!--        <input id="street" type="text" formControlName="street"  />-->
       </div>
       <div class="col-1">
         <label for="number">Huisnummer</label>
@@ -70,7 +87,7 @@
 
     <div class="btn-group mt-3" role="group">
       <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="searchForm.pristine">Zoek op</button>
-      <button type="reset" class="btn btn-outline-secondary" (click)="initForm()">Reset</button>
+      <button type="reset" class="btn btn-outline-secondary ms-1" (click)="initForm()">Reset</button>
     </div>
 
   </form>
