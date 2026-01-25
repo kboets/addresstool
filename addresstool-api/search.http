@@ -1,0 +1,26 @@
+### POST /search with SearchCriteria record
+POST http://localhost:8080/addresstool/api/search
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Kurt",
+  "firstName": null,
+  "street": null,
+  "number": 0,
+  "postalCode": null,
+  "city": null
+}
+### POST /search with SearchCriteria record -> return 2 elements
+POST http://localhost:8080/addresstool/api/search
+Content-Type: application/json
+Accept: application/json
+
+{
+"name": null,
+"firstName": null,
+"street": null,
+"number": 0,
+"postalCode": null,
+"city": "Averbode"
+}

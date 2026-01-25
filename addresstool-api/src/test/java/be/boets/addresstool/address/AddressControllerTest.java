@@ -1,5 +1,6 @@
 package be.boets.addresstool.address;
 
+import be.boets.addresstool.address.client.StreetClientService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +24,16 @@ class AddressControllerTest {
 
     @MockitoBean
     private AddressService addressService;
+    @MockitoBean
+    private StreetClientService streetClientService;
 
     @Test
     @DisplayName( "GET /api/cityByPostalCode - should return all cities for the given zipcode")
     void findByPostalCode_givenValidPostalCode() {
         var cities = List.of(
-                new City(null, "Hasselt", "3500", true),
-                new City(null, "Wimmertingen", "3501", false),
-                new City(null, "Kermt", "3510", false)
+                new City( "Hasselt", "3500", true),
+                new City( "Wimmertingen", "3501", false),
+                new City( "Kermt", "3510", false)
         );
         when(addressService.findByZipCode(any())).thenReturn(cities);
 
@@ -46,7 +49,7 @@ class AddressControllerTest {
     @DisplayName( "GET /api/cityByName - should return all cities for the given name")
     void cityByName_givenValidCityName() {
         var cities = List.of(
-                new City(null, "Averbode", "3271", false)
+                new City("Averbode", "3271", false)
         );
         when(addressService.findByCityName(any())).thenReturn(cities);
 
@@ -63,9 +66,9 @@ class AddressControllerTest {
     @DisplayName( "GET /api/cityNamesByPostalCode - should return all city names for the given zipcode")
     void findCityNamesByPostalCode_givenValidPostalCode() {
         var cities = List.of(
-                new City(null, "Hasselt", "3500", true),
-                new City(null, "Wimmertingen", "3501", false),
-                new City(null, "Kermt", "3510", false)
+                new City("Hasselt", "3500", true),
+                new City( "Wimmertingen", "3501", false),
+                new City( "Kermt", "3510", false)
         );
         when(addressService.findByZipCode(any())).thenReturn(cities);
 
@@ -81,7 +84,7 @@ class AddressControllerTest {
     @DisplayName( "GET /api/postalCodeByCityName - should return zipcode for the given city name")
     void findPostalCodeByCityName_givenValidCityName() {
         var cities = List.of(
-                new City(null, "Averbode", "3271", false)
+                new City( "Averbode", "3271", false)
         );
         when(addressService.findByCityName(any())).thenReturn(cities);
 
@@ -89,5 +92,29 @@ class AddressControllerTest {
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$").isEqualTo("3271");
+    }
+
+    @Test
+    @DisplayName( "GET /api/streetByPostalCode - should return all streets for the given zipcode")
+    void findStreetByPostalCode_givenValidPostalCode() {
+        when(streetClientService.findByPostalCode(any())).thenReturn(List.of("Averbodestraat", "Kroonstraat"));
+        restTestClient.get().uri("/api/streetByPostalCode/3271").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$[0]").isEqualTo("Averbodestraat");
+    }
+
+    @Test
+    @DisplayName( "GET /api/streetByCity - should return all streets for the given city name")
+    void findStreetByCityName_givenValidCityName() {
+        when(streetClientService.findByCityName(any())).thenReturn(List.of("Averbodestraat", "Kroonstraat"));
+        restTestClient.get().uri("/api/streetByCity/Averbode").exchange()
+                .expectStatus().isOk()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON_VALUE)
+                .expectBody()
+                .jsonPath("$").isArray()
+                .jsonPath("$[0]").isEqualTo("Averbodestraat");
     }
 }

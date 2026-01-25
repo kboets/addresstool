@@ -30,7 +30,7 @@ public class AddressService {
     private List<City> mapToCity(List<CityResponse> cityResponses) {
         List<City> cities = new ArrayList<>();
         for (CityResponse cityResponse : cityResponses) {
-            City city = new City(null, cityResponse.postcode().name(), cityResponse.postcode().postalCode(), cityResponse.postcode().mainName().equals(cityResponse.postcode().name()));
+            City city = new City(cityResponse.postcode().name(), cityResponse.postcode().postalCode(), cityResponse.postcode().mainName().equals(cityResponse.postcode().name()));
             cities.add(city);
         }
         return cities;

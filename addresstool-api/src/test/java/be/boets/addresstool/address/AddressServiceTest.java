@@ -38,7 +38,7 @@ class AddressServiceTest {
         when(cityClientService.findByPostcode(any())).thenReturn(cityResponses);
         List<City> cities = addressService.findByZipCode("3500");
         assertEquals(2, cities.size());
-        assertThat(cities.getFirst()).isEqualTo(new City(null, "Hasselt", "3500", true));
+        assertThat(cities.getFirst()).isEqualTo(new City("Hasselt", "3500", true));
     }
 
     @Test
@@ -59,7 +59,7 @@ class AddressServiceTest {
         when(cityClientService.findByCityName(any())).thenReturn(cityResponses);
         List<City> cities = addressService.findByCityName("averbode");
         assertEquals(1, cities.size());
-        assertThat(cities.getFirst()).isEqualTo(new City(null, "Averbode", "3271", false));
+        assertThat(cities.getFirst()).isEqualTo(new City( "Averbode", "3271", false));
     }
 
 
