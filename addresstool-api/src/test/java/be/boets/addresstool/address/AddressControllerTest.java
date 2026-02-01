@@ -31,9 +31,9 @@ class AddressControllerTest {
     @DisplayName( "GET /api/cityByPostalCode - should return all cities for the given zipcode")
     void findByPostalCode_givenValidPostalCode() {
         var cities = List.of(
-                new City( "Hasselt", "3500", true),
-                new City( "Wimmertingen", "3501", false),
-                new City( "Kermt", "3510", false)
+                new CityRecord( "Hasselt", "3500", true),
+                new CityRecord( "Wimmertingen", "3501", false),
+                new CityRecord( "Kermt", "3510", false)
         );
         when(addressService.findByZipCode(any())).thenReturn(cities);
 
@@ -49,7 +49,7 @@ class AddressControllerTest {
     @DisplayName( "GET /api/cityByName - should return all cities for the given name")
     void cityByName_givenValidCityName() {
         var cities = List.of(
-                new City("Averbode", "3271", false)
+                new CityRecord("Averbode", "3271", false)
         );
         when(addressService.findByCityName(any())).thenReturn(cities);
 
@@ -66,9 +66,9 @@ class AddressControllerTest {
     @DisplayName( "GET /api/cityNamesByPostalCode - should return all city names for the given zipcode")
     void findCityNamesByPostalCode_givenValidPostalCode() {
         var cities = List.of(
-                new City("Hasselt", "3500", true),
-                new City( "Wimmertingen", "3501", false),
-                new City( "Kermt", "3510", false)
+                new CityRecord("Hasselt", "3500", true),
+                new CityRecord( "Wimmertingen", "3501", false),
+                new CityRecord( "Kermt", "3510", false)
         );
         when(addressService.findByZipCode(any())).thenReturn(cities);
 
@@ -84,7 +84,7 @@ class AddressControllerTest {
     @DisplayName( "GET /api/postalCodeByCityName - should return zipcode for the given city name")
     void findPostalCodeByCityName_givenValidCityName() {
         var cities = List.of(
-                new City( "Averbode", "3271", false)
+                new CityRecord( "Averbode", "3271", false)
         );
         when(addressService.findByCityName(any())).thenReturn(cities);
 

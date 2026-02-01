@@ -16,8 +16,11 @@ spring:
   application:
     name: addresstool
   flyway:
-    enabled: false
+    enabled: true
     encoding: UTF-8
+    schemas: addresstool
+    create-schemas: true
+    default-schema: addresstool
   docker:
     compose:
       file: docker-compose.yaml

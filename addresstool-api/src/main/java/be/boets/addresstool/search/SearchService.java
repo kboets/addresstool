@@ -1,8 +1,8 @@
 package be.boets.addresstool.search;
 
-import be.boets.addresstool.address.Address;
-import be.boets.addresstool.address.City;
-import be.boets.addresstool.person.Person;
+import be.boets.addresstool.address.AddressRecord;
+import be.boets.addresstool.address.CityRecord;
+import be.boets.addresstool.person.PersonRecord;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -11,17 +11,17 @@ import java.util.List;
 @Service
 public class SearchService {
 
-    private final Address address;
-    private final Person kurtPerson;
-    private final Person elsPerson;
+    private final AddressRecord addressRecord;
+    private final PersonRecord kurtPerson;
+    private final PersonRecord elsPerson;
 
     public SearchService() {
-        address = new Address("Bredestraat", 72, null, new City("Averbode", "3271", false));
-        kurtPerson = new Person("Kurt", "Boets", LocalDate.of(1974, 1, 16), address);
-        elsPerson = new Person("Els", "Aerts", LocalDate.of(1971, 5, 7), address);
+        addressRecord = new AddressRecord("Bredestraat", 72, null, new CityRecord("Averbode", "3271", false));
+        kurtPerson = new PersonRecord("Kurt", "Boets", LocalDate.of(1974, 1, 16), addressRecord);
+        elsPerson = new PersonRecord("Els", "Aerts", LocalDate.of(1971, 5, 7), addressRecord);
     }
 
-    public List<Person> search(SearchCriteria searchCriteria) {
+    public List<PersonRecord> search(SearchCriteria searchCriteria) {
         if (searchCriteria.city() != null) {
             return List.of(elsPerson, kurtPerson);
         }
