@@ -1,4 +1,6 @@
 package be.boets.addresstool.search;
 
-public record SearchCriteria(String name, String firstName,String street, int number, String postalCode, String city) {
+public record SearchCriteria(String firstName, String name,
+                             String street, Integer number,
+                             String postalCode, String city) {
 }

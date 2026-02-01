@@ -3,7 +3,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
 import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AddressService} from "@shared/services/address-service";
-import {debounceTime, distinctUntilChanged} from "rxjs";
+import {SearchService} from "./search-service";
+import {SearchCriteria} from "@shared/models/searchCriteria";
 
 @Component({
   selector: 'app-dashboard',
@@ -14,6 +15,8 @@ import {debounceTime, distinctUntilChanged} from "rxjs";
 export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
+  private searchService = inject(SearchService);
+
   // cities name signals
   cityNames = this.addressService.cityNames;
   cityNamesError = this.addressService.cityNamesError;
@@ -24,17 +27,12 @@ export class DashboardComponent implements OnInit {
   streetNames = this.addressService.streets;
   streetNamesError = this.addressService.streetsError;
 
+  // Search results
+  persons = this.searchService.persons;
+  searchError = this.searchService.searchError;
+
   searchForm: FormGroup;
   // Results of the search
-  submissions: Array<{
-    firstName: string;
-    lastName: string;
-    street: string;
-    number: string;
-    postalCode: string;
-    city: string;
-    country: string;
-  }> = [];
 
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
@@ -61,19 +59,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
     this.onPostalCodeChange();
-    this.searchForm.get('city')?.valueChanges
-      .pipe(
-        debounceTime(1000),
-        distinctUntilChanged(),
-      )
-      .subscribe((value) => {
-      if (value !== undefined && value !== '') {
-        //console.log('city changed -> ', value);
-        //this.searchForm.patchValue({postalCode: ''});
-        //this.addressService.resetPostalCode();
-        //this.addressService.resetCityName();
-      }
-    });
   }
 
   public initForm(): void {
@@ -113,14 +98,8 @@ export class DashboardComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const criteria = this.searchForm.value as {
-      firstName?: string;
-      lastName?: string;
-      street?: string;
-      number?: string;
-      postalCode?: string;
-      city?: string;
-    };
+    const searchCriteria = this.searchForm.value as SearchCriteria;
+    this.searchService.search(searchCriteria);
   }
 
   private getCityNames() {

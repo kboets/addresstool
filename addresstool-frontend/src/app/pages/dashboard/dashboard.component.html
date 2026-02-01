@@ -15,6 +15,11 @@
       <div style="color: red" class="alert alert-danger">{{streetNamesError()}}</div>
     </div>
   }
+  @if (searchError()) {
+    <div class="text-danger mt-1">
+      <div style="color: red" class="alert alert-danger">{{searchError()}}</div>
+    </div>
+  }
 
   <h2 translate>Zoek scherm</h2>
 
@@ -92,7 +97,7 @@
 
   </form>
 
-  @if (submissions.length > 0) {
+  @if (persons().length > 0) {
     <div class="mt-3">
       <table class="user-table">
         <thead>
@@ -103,24 +108,22 @@
           <th>Number</th>
           <th>Postal Code</th>
           <th>City</th>
-          <th>Country</th>
         </tr>
         </thead>
         <tbody>
-          @for (user of submissions; track user.lastName) {
+          @for (person of persons(); track person.lastName) {
             <tr>
-              <td>{{ user.firstName }}</td>
-              <td>{{ user.lastName }}</td>
-              <td>{{ user.street }}</td>
-              <td>{{ user.number }}</td>
-              <td>{{ user.postalCode }}</td>
-              <td>{{ user.city }}</td>
-              <td>{{ user.country }}</td>
+              <td>{{ person.firstName }}</td>
+              <td>{{ person.lastName }}</td>
+              <td>{{ person.address?.street }}</td>
+              <td>{{ person.address?.number }}</td>
+              <td>{{ person.address?.city?.postalCode }}</td>
+              <td>{{ person.address?.city?.name }}</td>
             </tr>
 
           } @empty {
             <tr>
-              <td colspan="5" style="text-align: center">Nothing found</td>
+              <td colspan="6" style="text-align: center">Nothing found</td>
             </tr>
           }
         </tbody>
