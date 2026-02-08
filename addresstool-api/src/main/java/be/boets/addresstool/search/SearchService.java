@@ -17,8 +17,8 @@ public class SearchService {
 
     public SearchService() {
         addressRecord = new AddressRecord("Bredestraat", 72, null, new CityRecord("Averbode", "3271", false));
-        kurtPerson = new PersonRecord("Kurt", "Boets", LocalDate.of(1974, 1, 16), addressRecord);
-        elsPerson = new PersonRecord("Els", "Aerts", LocalDate.of(1971, 5, 7), addressRecord);
+        kurtPerson = new PersonRecord(null,"Kurt", "Boets", LocalDate.of(1974, 1, 16), addressRecord);
+        elsPerson = new PersonRecord(null, "Els", "Aerts", LocalDate.of(1971, 5, 7), addressRecord);
     }
 
     public List<PersonRecord> search(SearchCriteria searchCriteria) {

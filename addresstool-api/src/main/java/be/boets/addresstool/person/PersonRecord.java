@@ -4,5 +4,5 @@ import be.boets.addresstool.address.AddressRecord;
 
 import java.time.LocalDate;
 
-public record PersonRecord(String firstName, String lastName, LocalDate birthDate, AddressRecord addressRecord) {
+public record PersonRecord(Integer id, String firstName, String lastName, LocalDate birthDate, AddressRecord addressRecord) {
 }
