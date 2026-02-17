@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -72,6 +73,79 @@ public class Person implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(birthDate, person.birthDate) && Objects.equals(address, person.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, birthDate, address);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthDate=" + birthDate +
+                ", address=" + address +
+                '}';
+    }
+
+    public static final class PersonBuilder {
+        private Integer id;
+        private String firstName;
+        private String lastName;
+        private LocalDate birthDate;
+        private Address address;
+
+        private PersonBuilder() {
+        }
+
+        public static PersonBuilder aPerson() {
+            return new PersonBuilder();
+        }
+
+        public PersonBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public PersonBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
+
+        public PersonBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
+
+        public PersonBuilder withBirthDate(LocalDate birthDate) {
+            this.birthDate = birthDate;
+            return this;
+        }
+
+        public PersonBuilder withAddress(Address address) {
+            this.address = address;
+            return this;
+        }
+
+        public Person build() {
+            Person person = new Person();
+            person.setId(id);
+            person.setFirstName(firstName);
+            person.setLastName(lastName);
+            person.setBirthDate(birthDate);
+            person.setAddress(address);
+            return person;
+        }
     }
 }
 

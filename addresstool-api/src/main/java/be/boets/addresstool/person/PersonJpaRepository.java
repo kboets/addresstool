@@ -43,6 +43,11 @@ public class PersonJpaRepository implements PersonDao {
     }
 
     @Override
+    public void deleteAll() {
+        personRepository.deleteAll();
+    }
+
+    @Override
     public void update(Person person) {
         personRepository.save(person);
     }

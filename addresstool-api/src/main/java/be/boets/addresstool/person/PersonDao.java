@@ -12,6 +12,7 @@ public interface PersonDao {
     void save(Person person);
     void delete(Person person);
     void deleteById(int id);
+    void deleteAll();
     void update(Person person);
     List<Person> search(SearchCriteria criteria);
 }

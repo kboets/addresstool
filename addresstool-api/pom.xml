@@ -13,7 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>addresstool</name>
-	<description>address tool </description>
+	<description>address tool</description>
 	<scm>
 		<connection/>
 		<developerConnection/>
@@ -23,6 +23,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<testcontainer.version>1.21.4</testcontainer.version>
 	</properties>
 	<dependencies>
 		<!-- spring boot dependencies -->
@@ -86,13 +87,27 @@
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-flyway-test</artifactId>
+			<artifactId>spring-boot-starter-flyway</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc-test</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${testcontainer.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.testcontainers</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${testcontainer.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-testcontainers</artifactId>
 		</dependency>
 	</dependencies>
 

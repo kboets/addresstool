@@ -13,7 +13,7 @@ public class SearchSpecs {
             List<Predicate> predicates = new ArrayList<>();
 
             if (criteria.name() != null && !criteria.name().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + criteria.name().toLowerCase() + "%"));
+                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + criteria.name().toLowerCase() + "%"));
             }
 
             if (criteria.firstName() != null && !criteria.firstName().isEmpty()) {
