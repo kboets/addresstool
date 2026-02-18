@@ -16,7 +16,6 @@ import java.util.Set;
 @RequestMapping("/api")
 public class AddressController {
 
-
     private final AddressService addressService;
     private final StreetClientService streetClientService;
 

@@ -1,0 +1,52 @@
+### POST /SAVE person
+POST http://localhost:8080/addresstool/api/person
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": null,
+  "lastName": "BOETS",
+  "firstName": "Kurt",
+  "birthDate": "1974-01-16",
+  "addressRecord": {
+    "street": "Bredestraat",
+    "number": 72,
+    "box": null,
+    "cityRecord": {
+      "postalCode": "3271",
+      "name": "AVERBODE",
+      "isMain": false
+    }
+  }
+}
+
+### GET /getAllPersons
+GET http://localhost:8080/addresstool/api/person/all
+
+### GET /getbyId
+GET http://localhost:8080/addresstool/api/person/8
+
+### PUT /update person
+PUT http://localhost:8080/addresstool/api/person
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 8,
+  "lastName": "BOETS",
+  "firstName": "Kurt",
+  "birthDate": "1974-01-16",
+  "addressRecord": {
+    "street": "Bredestraat",
+    "number": 72,
+    "box": "a",
+    "cityRecord": {
+      "postalCode": "3271",
+      "name": "AVERBODE",
+      "isMain": false
+    }
+  }
+}
+
+### DELETE /deleteById person
+DELETE http://localhost:8080/addresstool/api/person/8
