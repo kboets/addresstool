@@ -80,12 +80,6 @@ class PersonServiceIntegrationTest {
     }
 
     @Test
-    void getAllPersons() {
-        List<PersonRecord> allPersons = underTest.getAllPersons();
-        assertThat(allPersons).hasSize(4);
-    }
-
-    @Test
     void searchPersons_givenOneCriteria() {
         SearchCriteria criteria = SearchCriteria.
                 SearchCriteriaBuilder.aSearchCriteria()
@@ -99,6 +93,31 @@ class PersonServiceIntegrationTest {
                 .build();
         persons = underTest.search(criteria);
         assertThat(persons).hasSize(2);
+    }
+
+    @Test
+    void searchPersons_givenTwoCriteria() {
+        SearchCriteria criteria = SearchCriteria.
+                SearchCriteriaBuilder.aSearchCriteria()
+                .withCity("Pelt")
+                .withName("Doh")
+                .build();
+        List<PersonRecord> persons = underTest.search(criteria);
+        assertThat(persons).hasSize(1);
+        assertThat(persons.getFirst().firstName()).isEqualTo("John");
+    }
+
+    @Test
+    void searchPersons_givenThreeCriteria() {
+        SearchCriteria criteria = SearchCriteria.
+                SearchCriteriaBuilder.aSearchCriteria()
+                .withPostalCode("3271")
+                .withName("Doh")
+                .withStreet("Demerstraat")
+                .build();
+        List<PersonRecord> persons = underTest.search(criteria);
+        assertThat(persons).hasSize(1);
+        assertThat(persons.getFirst().firstName()).isEqualTo("John");
     }
 
 

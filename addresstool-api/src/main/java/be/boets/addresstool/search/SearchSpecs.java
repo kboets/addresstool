@@ -1,56 +1,68 @@
 package be.boets.addresstool.search;
 
+import be.boets.addresstool.address.Address;
+import be.boets.addresstool.address.City;
 import be.boets.addresstool.person.Person;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class SearchSpecs {
+
     public static Specification<Person> searchByCriteria(SearchCriteria criteria) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
+        return (root, query, cb) -> {
+            if (criteria == null) {
+                return cb.conjunction();
+            }
+
             List<Predicate> predicates = new ArrayList<>();
 
-            if (criteria.name() != null && !criteria.name().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastName")), "%" + criteria.name().toLowerCase() + "%"));
-            }
+            containsIgnoreCase(predicates, cb, root.get("lastName"), criteria.name());
+            containsIgnoreCase(predicates, cb, root.get("firstName"), criteria.firstName());
 
-            if (criteria.firstName() != null && !criteria.firstName().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstName")), "%" + criteria.firstName().toLowerCase() + "%"));
-            }
-
-//            if (criteria.birthDate() != null) {
-//                predicates.add(criteriaBuilder.equal(root.get("birthDate"), criteria.birthDate()));
-//            }
-
-            if (criteria.street() != null && !criteria.street().isEmpty()) {
-                predicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("address").get("street")), "%" + criteria.street().toLowerCase() + "%"));
-            }
+            // Use explicit joins for nested properties
+            Join<Person, Address> address = root.join("address", JoinType.LEFT);
+            containsIgnoreCase(predicates, cb, address.get("street"), criteria.street());
 
             if (criteria.number() != null) {
-                predicates.add(criteriaBuilder.like(root.get("address").get("number"), "%" + criteria.number() + "%"));
+                predicates.add(cb.equal(address.get("number"), criteria.number()));
             }
 
-            if (criteria.postalCode() != null && !criteria.postalCode().isEmpty()) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("address").get("city").get("postalCode")),
-                                "%" + criteria.postalCode().toLowerCase() + "%"
-                        )
-                );
-            }
+            Join<Address, City> city = address.join("city", JoinType.LEFT);
+            containsIgnoreCase(predicates, cb, city.get("postalCode"), criteria.postalCode());
+            containsIgnoreCase(predicates, cb, city.get("name"), criteria.city());
 
-            if (criteria.city() != null && !criteria.city().isEmpty()) {
-                predicates.add(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(root.get("address").get("city").get("name")),
-                                "%" + criteria.city().toLowerCase() + "%"
-                        )
-                );
-            }
-
-            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+            return predicates.isEmpty()
+                    ? cb.conjunction()
+                    : cb.and(predicates.toArray(Predicate[]::new));
         };
+    }
+
+    private static void containsIgnoreCase(
+            List<Predicate> predicates,
+            jakarta.persistence.criteria.CriteriaBuilder cb,
+            Path<String> path,
+            String rawValue
+    ) {
+        if (rawValue == null) {
+            return;
+        }
+        String value = rawValue.trim();
+        if (value.isEmpty()) {
+            return;
+        }
+
+        predicates.add(
+                cb.like(
+                        cb.lower(path),
+                        "%" + value.toLowerCase(Locale.ROOT) + "%"
+                )
+        );
     }
 }
