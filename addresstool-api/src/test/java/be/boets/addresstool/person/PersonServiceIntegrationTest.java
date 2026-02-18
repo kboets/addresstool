@@ -1,5 +1,6 @@
 package be.boets.addresstool.person;
 
+import be.boets.addresstool.SharedPostgressContainer;
 import be.boets.addresstool.address.Address;
 import be.boets.addresstool.address.AddressMapperImpl;
 import be.boets.addresstool.address.City;
@@ -38,8 +39,7 @@ class PersonServiceIntegrationTest {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
-            DockerImageName.parse("postgres:16-alpine"));
+    private static final SharedPostgressContainer POSTGRES_CONTAINER = SharedPostgressContainer.getInstance();
 
     @Autowired
     private PersonDao personDao;

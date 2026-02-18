@@ -1,68 +1,44 @@
 package be.boets.addresstool.search;
 
-import be.boets.addresstool.address.Address;
-import be.boets.addresstool.address.City;
 import be.boets.addresstool.person.Person;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class SearchSpecs {
 
     public static Specification<Person> searchByCriteria(SearchCriteria criteria) {
         return (root, query, cb) -> {
-            if (criteria == null) {
-                return cb.conjunction();
-            }
-
             List<Predicate> predicates = new ArrayList<>();
 
-            containsIgnoreCase(predicates, cb, root.get("lastName"), criteria.name());
-            containsIgnoreCase(predicates, cb, root.get("firstName"), criteria.firstName());
+            // 1. Direct Fields
+            addLikePredicate(predicates, cb, root.get("lastName"), criteria.name());
+            addLikePredicate(predicates, cb, root.get("firstName"), criteria.firstName());
 
-            // Use explicit joins for nested properties
-            Join<Person, Address> address = root.join("address", JoinType.LEFT);
-            containsIgnoreCase(predicates, cb, address.get("street"), criteria.street());
+            // 2. Joins (Crucial for performance and avoiding Cartesian products)
+            var address = root.join("address", JoinType.LEFT);
+            var city = address.join("city", JoinType.LEFT);
 
-            if (criteria.number() != null) {
-                predicates.add(cb.equal(address.get("number"), criteria.number()));
-            }
+            addLikePredicate(predicates, cb, address.get("street"), criteria.street());
+            addLikePredicate(predicates, cb, address.get("number"), criteria.number() != null ? criteria.number().toString() : null);
+            addLikePredicate(predicates, cb, city.get("postalCode"), criteria.postalCode());
+            addLikePredicate(predicates, cb, city.get("name"), criteria.city());
 
-            Join<Address, City> city = address.join("city", JoinType.LEFT);
-            containsIgnoreCase(predicates, cb, city.get("postalCode"), criteria.postalCode());
-            containsIgnoreCase(predicates, cb, city.get("name"), criteria.city());
-
-            return predicates.isEmpty()
-                    ? cb.conjunction()
-                    : cb.and(predicates.toArray(Predicate[]::new));
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 
-    private static void containsIgnoreCase(
-            List<Predicate> predicates,
-            jakarta.persistence.criteria.CriteriaBuilder cb,
-            Path<String> path,
-            String rawValue
-    ) {
-        if (rawValue == null) {
-            return;
+    /**
+     * Helper to handle null checks and case-insensitive LIKE queries
+     */
+    private static void addLikePredicate(List<Predicate> predicates, jakarta.persistence.criteria.CriteriaBuilder cb, Path<String> path, String value) {
+        if (StringUtils.hasText(value)) {
+            predicates.add(cb.like(cb.lower(path), "%" + value.toLowerCase() + "%"));
         }
-        String value = rawValue.trim();
-        if (value.isEmpty()) {
-            return;
-        }
-
-        predicates.add(
-                cb.like(
-                        cb.lower(path),
-                        "%" + value.toLowerCase(Locale.ROOT) + "%"
-                )
-        );
     }
 }
