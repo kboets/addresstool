@@ -25,6 +25,7 @@ export class AddressService {
   public postalCodeSelected(zipCode: number) {
     this.selectedPostalCode.set(zipCode);
   }
+
   public resetPostalCode() {
     this.selectedPostalCode.set(undefined);
   }

@@ -1,36 +1,130 @@
 <section class="main-container">
-  <h2>Users List</h2>
+<!--  <h2>{{ isEditing ? 'Voeg toe' : 'Update' }}</h2>-->
 
-  <div class="user-table-container">
-    <table class="user-table">
-      <thead>
-        <tr>
-          <th>Avatar</th>
-          <th>Full Name</th>
-          <th>Email</th>
-          <th>Phone</th>
-          <th>Location</th>
-        </tr>
-      </thead>
-      <tbody>
-        @if (!isLoading) {
-          @for (user of users; track user.id) {
-            <tr (click)="userClicked()">
-              <td>
-                <img [src]="user.picture.thumbnail" alt="{{ user.name.first }}'s avatar" />
-              </td>
-              <td>{{ user.name.title }} {{ user.name.first }} {{ user.name.last }}</td>
-              <td>{{ user.email }}</td>
-              <td>{{ user.phone }}</td>
-              <td>{{ user.location.city }}, {{ user.location.country }}</td>
-            </tr>
-          }
-        } @else {
-          <tr>
-            <td colspan="5" style="text-align: center">Loading...</td>
-          </tr>
-        }
-      </tbody>
-    </table>
-  </div>
-</section>
+  <form [formGroup]="personForm" class="address-form">
+    <div>
+      <h4>Persoons gegevens</h4>
+      <div class="row row-space mt-2">
+        <div class="col-2">
+          <label for="firstName">Voornaam</label>
+          <input id="firstName" type="text" formControlName="firstName" />
+        </div>
+        <div class="col-3">
+          <label for="lastName">Familienaam</label>
+          <input id="lastName" type="text" formControlName="lastName" />
+        </div>
+      </div>
+      <div class="row row-space mt-2">
+        <div class="col-2">
+          <label for="birthDate">geboorte dag</label>
+          <input id="birthDate" type="date" formControlName="birthDate" />
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <h4>Adres gegevens</h4>
+      <div class="row row-space mt-2" formGroupName="addressRecord">
+        <div class="row row-space mt-2 form-section" formGroupName="cityRecord">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="city">Gemeente</label>
+              <input
+                id="city"
+                type="text"
+                formControlName="name"
+                (input)="onCitySelected($event)"
+                autocomplete="off"
+                [attr.list]="'cityList-' + cityNames()?.length"
+              />
+
+              <datalist [id]="'cityList-' + cityNames()?.length">
+                @for (cityName of cityNames(); track cityName) {
+                <option [value]="cityName"></option>
+                }
+              </datalist>
+            </div>
+          </div>
+          <div class="col-1">
+            <div class="form-group">
+              <label for="postalCode">Postcode</label>
+              <input id="postalCode" type="text" inputmode="numeric" pattern="[0-9]*" formControlName="postalCode" />
+            </div>
+          </div>
+        </div>
+        <div class="row row-space mt-2">
+          <div class="col-4">
+            <div class="form-group">
+              <label for="street">Straat</label>
+              <input
+                id="street"
+                type="text"
+                formControlName="street"
+                autocomplete="off"
+                [attr.list]="'streetList-' + streetNames()?.length"
+              />
+              <datalist [id]="'streetList-' + streetNames()?.length">
+                @for (streetName of streetNames(); track streetName) {
+                <option [value]="streetName"></option>
+                }
+              </datalist>
+            </div>
+          </div>
+          <div class="col-1">
+            <div class="form-group">
+              <label for="number">Huisnummer</label>
+              <input id="number" type="text" formControlName="number" />
+            </div>
+          </div>
+          <div class="col-1">
+            <div class="form-group">
+              <label for="box">Box</label>
+              <input id="box" type="text" formControlName="box" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="btn-group mt-3" role="group">
+      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="personForm.invalid">{{ isEditing ? 'Update' : 'Voeg toe' }}</button>
+      <button type="button" class="btn btn-outline-secondary ms-1" (click)="resetForm()">Reset</button>
+    </div>
+  </form>
+
+  <hr />
+
+<!--  <h4 class="mt-5">Overzicht</h4>-->
+<!--  <div class="user-table-container">-->
+<!--    <table class="user-table">-->
+<!--      <thead>-->
+<!--        <tr>-->
+<!--          <th>Name</th>-->
+<!--          <th>Birth Date</th>-->
+<!--          <th>Address</th>-->
+<!--          <th>Actions</th>-->
+<!--        </tr>-->
+<!--      </thead>-->
+<!--      <tbody>-->
+<!--        @for (person of people; track person.id) {-->
+<!--        <tr>-->
+<!--          <td>{{ person.firstName }} {{ person.lastName }}</td>-->
+<!--          <td>{{ person.birthDate }}</td>-->
+<!--          <td>-->
+<!--            {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }},-->
+<!--            {{ person.address.city.postalCode }} {{ person.address.city.name }}-->
+<!--          </td>-->
+<!--          <td>-->
+<!--            <button (click)="editPerson(person)">Edit</button>-->
+<!--            <button (click)="deletePerson(person.id!)">Delete</button>-->
+<!--          </td>-->
+<!--        </tr>-->
+<!--        } @empty {-->
+<!--        <tr>-->
+<!--          <td colspan="4" style="text-align: center">No people in the list</td>-->
+<!--        </tr>-->
+<!--        }-->
+<!--      </tbody>-->
+<!--    </table>-->
+<!--  </div>-->
+<!--</section>-->

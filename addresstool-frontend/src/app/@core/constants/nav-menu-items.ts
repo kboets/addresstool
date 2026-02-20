@@ -9,13 +9,13 @@ import { NavMenuItem } from '@core/interfaces';
 export const webSidebarMenuItems: NavMenuItem[] = [
   {
     href: '/dashboard',
-    title: 'Dashboard',
+    title: 'Zoek',
     active: true,
     icon: 'fa-home',
   },
   {
     href: '/users',
-    title: 'Users',
+    title: 'Toevoegen',
     active: false,
     icon: 'fa-users',
     permissions: [PERMISSIONS.ACCESS_USER],

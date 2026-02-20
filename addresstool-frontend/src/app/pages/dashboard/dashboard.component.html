@@ -21,7 +21,7 @@
     </div>
   }
 
-  <h2 translate>Zoek scherm</h2>
+  <h3 translate>Zoek scherm</h3>
 
   <form [formGroup]="searchForm" class="address-form">
     <div class="row row-space mt-2">
@@ -91,13 +91,13 @@
     </div>
 
     <div class="btn-group mt-3" role="group">
-      <button type="submit" class="btn btn-primary" (click)="onSubmit()" [disabled]="searchForm.pristine">Zoek op</button>
-      <button type="reset" class="btn btn-outline-secondary ms-1" (click)="initForm()">Reset</button>
+      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!searchForm.valid">Zoek op</button>
+      <button type="button" class="btn btn-outline-secondary ms-1" (click)="initForm()">Reset</button>
     </div>
 
   </form>
 
-  @if (persons().length > 0) {
+  @if (persons()?.length > 0) {
     <div class="mt-3">
       <table class="user-table">
         <thead>

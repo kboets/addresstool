@@ -1,6 +1,8 @@
 package be.boets.addresstool.search;
 
+import be.boets.addresstool.person.PersonMapper;
 import be.boets.addresstool.person.PersonRecord;
+import be.boets.addresstool.person.PersonService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,14 +14,14 @@ import java.util.List;
 @RequestMapping("/api")
 public class SearchController {
 
-    private final SearchService searchService;
+    private final PersonService personService;
 
-    public SearchController(SearchService searchService) {
-        this.searchService = searchService;
+    public SearchController(PersonService personService) {
+        this.personService = personService;
     }
 
     @PostMapping(value = "/search")
     public List<PersonRecord> search(@RequestBody SearchCriteria searchCriteria) {
-        return searchService.search(searchCriteria);
+        return personService.search(searchCriteria);
     }
 }

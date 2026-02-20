@@ -1,7 +1,7 @@
 import {Component, effect, inject, OnInit} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
 import {AddressService} from "@shared/services/address-service";
 import {SearchService} from "./search-service";
 import {SearchCriteria} from "@shared/models/searchCriteria";
@@ -32,7 +32,6 @@ export class DashboardComponent implements OnInit {
   searchError = this.searchService.searchError;
 
   searchForm: FormGroup;
-  // Results of the search
 
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
@@ -41,12 +40,26 @@ export class DashboardComponent implements OnInit {
       street: [''],
       number: [''],
       postalCode: ['', [
-        Validators.required,
         Validators.pattern('^[0-9]{4}$')]
         ],
       city: [''],
       country: [''],
-    });
+    },
+      {
+        // Form is valid if at least one criterion is filled in
+        validators: [this.atLeastOneFilledValidator([
+          'firstName',
+          'lastName',
+          'street',
+          'number',
+          'postalCode',
+          'city',
+          'country',
+        ])]
+      }
+      );
+
+
 
     effect(() => {
       const code = this.postalCode();
@@ -73,7 +86,7 @@ export class DashboardComponent implements OnInit {
     });
     this.addressService.resetPostalCode();
     this.addressService.resetCityName();
-
+    this.searchService.clearSearch();
   }
 
   private onPostalCodeChange(): void {
@@ -88,6 +101,7 @@ export class DashboardComponent implements OnInit {
       }
     })
   }
+
 
   onCitySelected(event: Event): void {
     const input = event.target as HTMLInputElement;
@@ -109,4 +123,19 @@ export class DashboardComponent implements OnInit {
   }
 
   protected readonly event = event;
+
+  /**
+   * Validates that at least one of the given controls has a non-empty value.
+   * Returns { atLeastOne: true } when all are empty.
+   */
+  private atLeastOneFilledValidator(controlNames: string[]) {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const hasValue = controlNames.some((name) => {
+        const v = group.get(name)?.value;
+        return v !== null && v !== undefined && String(v).trim() !== '';
+      });
+
+      return hasValue ? null : { atLeastOne: true };
+    };
+  }
 }
