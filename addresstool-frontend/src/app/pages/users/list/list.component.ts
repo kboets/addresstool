@@ -191,7 +191,7 @@ export class ListComponent implements OnInit {
   }
 
   private getCityNames() {
-    const postalCode = this.personForm.get('addressRecord.cityRecord.postalCode')?.value;
+    const postalCode = this.personForm.get('address.city.postalCode')?.value;
     console.log('component -> getCityNames: ', postalCode);
     this.addressService.postalCodeSelected(+postalCode);
   }
