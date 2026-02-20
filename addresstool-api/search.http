@@ -4,12 +4,12 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Kurt",
-  "firstName": null,
+  "firstName": "Kurt",
+  "name": null,
   "street": null,
-  "number": 0,
+  "number": null,
   "postalCode": null,
-  "cityEntity": null
+  "city": null
 }
 ### POST /search with SearchCriteria record -> return 2 elements
 POST http://localhost:8080/addresstool/api/search
@@ -20,7 +20,7 @@ Accept: application/json
 "name": null,
 "firstName": null,
 "street": null,
-"number": 0,
+"number": null,
 "postalCode": null,
-"cityEntity": "Averbode"
+"city": "Averbode"
 }

@@ -16,17 +16,17 @@ public class PersonController {
     }
 
     @PostMapping
-    public void save(@RequestBody PersonRecord person) {
+    public void save(@RequestBody Person person) {
         personService.save(person);
     }
 
     @PutMapping
-    public void update(@RequestBody PersonRecord person) {
+    public void update(@RequestBody Person person) {
         personService.save(person);
     }
 
     @DeleteMapping
-    public void delete(@RequestBody PersonRecord person) {
+    public void delete(@RequestBody Person person) {
         personService.delete(person);
     }
 
@@ -36,12 +36,12 @@ public class PersonController {
     }
 
     @GetMapping("/all")
-    public List<PersonRecord> getAllPersons() {
+    public List<Person> getAllPersons() {
         return personService.getAllPersons();
     }
 
     @GetMapping("/{id}")
-    public Optional<PersonRecord> getById(@PathVariable int id) {
+    public Optional<Person> getById(@PathVariable int id) {
         return personService.getById(id);
     }
 }

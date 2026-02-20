@@ -98,41 +98,42 @@ public class PersonEntity implements Serializable {
                 '}';
     }
 
-    public static final class PersonBuilder {
+
+    public static final class PersonEntityBuilder {
         private Integer id;
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
         private AddressEntity addressEntity;
 
-        private PersonBuilder() {
+        private PersonEntityBuilder() {
         }
 
-        public static PersonBuilder aPerson() {
-            return new PersonBuilder();
+        public static PersonEntityBuilder aPersonEntity() {
+            return new PersonEntityBuilder();
         }
 
-        public PersonBuilder withId(Integer id) {
+        public PersonEntityBuilder withId(Integer id) {
             this.id = id;
             return this;
         }
 
-        public PersonBuilder withFirstName(String firstName) {
+        public PersonEntityBuilder withFirstName(String firstName) {
             this.firstName = firstName;
             return this;
         }
 
-        public PersonBuilder withLastName(String lastName) {
+        public PersonEntityBuilder withLastName(String lastName) {
             this.lastName = lastName;
             return this;
         }
 
-        public PersonBuilder withBirthDate(LocalDate birthDate) {
+        public PersonEntityBuilder withBirthDate(LocalDate birthDate) {
             this.birthDate = birthDate;
             return this;
         }
 
-        public PersonBuilder withAddress(AddressEntity addressEntity) {
+        public PersonEntityBuilder withAddressEntity(AddressEntity addressEntity) {
             this.addressEntity = addressEntity;
             return this;
         }
@@ -143,7 +144,7 @@ public class PersonEntity implements Serializable {
             personEntity.setFirstName(firstName);
             personEntity.setLastName(lastName);
             personEntity.setBirthDate(birthDate);
-            personEntity.setAddress(addressEntity);
+            personEntity.addressEntity = this.addressEntity;
             return personEntity;
         }
     }

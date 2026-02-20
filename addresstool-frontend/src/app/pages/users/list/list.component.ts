@@ -38,11 +38,11 @@ export class ListComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       birthDate: ['', Validators.required],
-      addressRecord: this._fb.group({
+      address: this._fb.group({
         street: ['', Validators.required],
         number: [null, [Validators.required, Validators.min(1)]],
         box: [''],
-        cityRecord: this._fb.group({
+        city: this._fb.group({
           name: ['', Validators.required],
           postalCode: ['', Validators.required],
           isMain: [true],
@@ -52,7 +52,7 @@ export class ListComponent implements OnInit {
     effect(() => {
       const code = this.postalCode();
       if (code) {
-        this.personForm.get('addressRecord.cityRecord.postalCode')?.setValue(code, { emitEvent: false });
+        this.personForm.get('address.city.postalCode')?.setValue(code, { emitEvent: false });
       } else {
         console.log('postal code is undefined');
       }
@@ -142,8 +142,8 @@ export class ListComponent implements OnInit {
 
   resetForm() {
     this.personForm.reset({
-      addressRecord: {
-        cityRecord: {
+      address: {
+        city: {
           isMain: true,
         },
       },
@@ -159,11 +159,11 @@ export class ListComponent implements OnInit {
       firstName: '',
       lastName: '',
       birthDate: '',
-      addressRecord: {
+      address: {
         street: '',
         number: null,
         box: '',
-        cityRecord: {
+        city: {
           name: '',
           postalCode: '',
           isMain: true,
@@ -175,17 +175,17 @@ export class ListComponent implements OnInit {
   }
 
   private onPostalCodeChange(): void {
-    this.personForm.get('addressRecord.cityRecord.postalCode')?.statusChanges.subscribe((status) => {
+    this.personForm.get('address.city.postalCode')?.statusChanges.subscribe((status) => {
       if (status === 'VALID') {
         this.getCityNames();
       }
     });
-    this.personForm.get('addressRecord.cityRecord.postalCode')?.valueChanges.subscribe(() => {
+    this.personForm.get('address.city.postalCode')?.valueChanges.subscribe(() => {
       if (
-        this.personForm.get('addressRecord.cityRecord.name')?.value !== undefined &&
-        this.personForm.get('addressRecord.cityRecord.name')?.value !== ''
+        this.personForm.get('address.city.name')?.value !== undefined &&
+        this.personForm.get('address.city.name')?.value !== ''
       ) {
-        this.personForm.patchValue({ cityRecord: { name: '' } });
+        this.personForm.patchValue({ city: { name: '' } });
       }
     });
   }

@@ -1,7 +1,7 @@
 package be.boets.addresstool.person;
 
-import be.boets.addresstool.address.AddressRecord;
-import be.boets.addresstool.address.CityRecord;
+import be.boets.addresstool.address.Address;
+import be.boets.addresstool.address.City;
 import be.boets.addresstool.search.SearchCriteria;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,8 @@ public class PersonService {
         this.personDao = personDao;
     }
 
-    public void save(PersonRecord personRecord) {
-        PersonRecord upperCasePerson = upperFirstCharacter(personRecord);
+    public void save(Person person) {
+        Person upperCasePerson = upperFirstCharacter(person);
         PersonEntity personEntity = personMapper.toPerson(upperCasePerson);
         if (personEntity.getId() == null) {
             personDao.save(personEntity);
@@ -30,7 +30,7 @@ public class PersonService {
         }
     }
 
-    public void delete(PersonRecord person) {
+    public void delete(Person person) {
         personDao.delete(personMapper.toPerson(person));
     }
 
@@ -38,38 +38,39 @@ public class PersonService {
         personDao.deleteById(id);
     }
 
-    public Optional<PersonRecord> getById(int id) {
+    public Optional<Person> getById(int id) {
         Optional<PersonEntity> person = personDao.getById(id);
         return person.map(personMapper::toPersonRecord);
     }
 
-    public List<PersonRecord> getAllPersons() {
+    public List<Person> getAllPersons() {
         return personMapper.toPersonsRecord(personDao.getAll());
     }
 
-    public List<PersonRecord> search(SearchCriteria searchCriteria) {
-        return personMapper.toPersonsRecord(personDao.search(searchCriteria));
+    public List<Person> search(SearchCriteria searchCriteria) {
+        List<PersonEntity> searchResult = personDao.search(searchCriteria);
+        return personMapper.toPersonsRecord(searchResult);
     }
 
-    private PersonRecord upperFirstCharacter(PersonRecord personRecord) {
-        CityRecord upperCaseCity = CityRecord.CityRecordBuilder.aCityRecord()
-                .withIsMain(personRecord.addressRecord().cityRecord().isMain())
-                .withName(StringUtils.capitalize(personRecord.addressRecord().cityRecord().name().toLowerCase()))
-                .withPostalCode(personRecord.addressRecord().cityRecord().postalCode())
+    private Person upperFirstCharacter(Person person) {
+        City upperCaseCity = City.CityBuilder.aCity()
+                .withIsMain(person.address().city().isMain())
+                .withName(StringUtils.capitalize(person.address().city().name().toLowerCase()))
+                .withPostalCode(person.address().city().postalCode())
                 .build();
-        AddressRecord upperCaseAddress = AddressRecord.AddressRecordBuilder.anAddressRecord()
-                .withBox(personRecord.addressRecord().box())
-                .withNumber(personRecord.addressRecord().number())
-                .withStreet(StringUtils.capitalize(personRecord.addressRecord().street().toLowerCase()))
-                .withCityRecord(upperCaseCity)
+        Address upperCaseAddress = Address.AddressBuilder.anAddress()
+                .withBox(person.address().box())
+                .withNumber(person.address().number())
+                .withStreet(StringUtils.capitalize(person.address().street().toLowerCase()))
+                .withCity(upperCaseCity)
                 .build();
-        return PersonRecord.PersonRecordBuilder
-                .aPersonRecord()
-                .withId(personRecord.id())
-                .withBirthDate(personRecord.birthDate())
-                .withFirstName(StringUtils.capitalize(personRecord.firstName().toLowerCase()))
-                .withLastName(StringUtils.capitalize(personRecord.lastName().toLowerCase()))
-                .withAddressRecord(upperCaseAddress)
+        return Person.PersonBuilder
+                .aPerson()
+                .withId(person.id())
+                .withBirthDate(person.birthDate())
+                .withFirstName(StringUtils.capitalize(person.firstName().toLowerCase()))
+                .withLastName(StringUtils.capitalize(person.lastName().toLowerCase()))
+                .withAddress(upperCaseAddress)
                 .build();
     }
 }

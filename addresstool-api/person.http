@@ -8,11 +8,11 @@ Accept: application/json
   "lastName": "BOETS",
   "firstName": "Kurt",
   "birthDate": "1974-01-16",
-  "addressRecord": {
+  "address": {
     "street": "Bredestraat",
     "number": 72,
     "box": null,
-    "cityRecord": {
+    "city": {
       "postalCode": "3271",
       "name": "AVERBODE",
       "isMain": false
@@ -36,11 +36,11 @@ Accept: application/json
   "lastName": "BOETS",
   "firstName": "Kurt",
   "birthDate": "1974-01-16",
-  "addressRecord": {
+  "address": {
     "street": "Bredestraat",
     "number": 72,
     "box": "a",
-    "cityRecord": {
+    "city": {
       "postalCode": "3271",
       "name": "AVERBODE",
       "isMain": false

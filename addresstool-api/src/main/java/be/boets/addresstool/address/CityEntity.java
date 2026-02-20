@@ -56,23 +56,24 @@ public class CityEntity implements Serializable {
         return Objects.hash(name, postalCode);
     }
 
-    public static final class CityBuilder {
+
+    public static final class CityEntityBuilder {
         private String name;
         private String postalCode;
 
-        private CityBuilder() {
+        private CityEntityBuilder() {
         }
 
-        public static CityBuilder aCity() {
-            return new CityBuilder();
+        public static CityEntityBuilder aCityEntity() {
+            return new CityEntityBuilder();
         }
 
-        public CityBuilder withName(String name) {
+        public CityEntityBuilder withName(String name) {
             this.name = name;
             return this;
         }
 
-        public CityBuilder withPostalCode(String postalCode) {
+        public CityEntityBuilder withPostalCode(String postalCode) {
             this.postalCode = postalCode;
             return this;
         }

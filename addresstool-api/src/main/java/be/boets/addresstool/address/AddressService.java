@@ -17,21 +17,21 @@ public class AddressService {
         this.cityClientService = cityClientService;
     }
 
-    public List<CityRecord> findByZipCode(String postcode) {
+    public List<City> findByZipCode(String postcode) {
         List<CityResponse> cityResponses = cityClientService.findByPostcode(postcode);
         return mapToCity(cityResponses);
     }
 
-    public List<CityRecord> findByCityName(String cityName) {
+    public List<City> findByCityName(String cityName) {
         List<CityResponse> cityResponses = cityClientService.findByCityName(StringUtils.capitalize(cityName));
         return mapToCity(cityResponses);
     }
 
-    private List<CityRecord> mapToCity(List<CityResponse> cityResponses) {
-        List<CityRecord> cities = new ArrayList<>();
+    private List<City> mapToCity(List<CityResponse> cityResponses) {
+        List<City> cities = new ArrayList<>();
         for (CityResponse cityResponse : cityResponses) {
-            CityRecord cityRecord = new CityRecord(cityResponse.postcode().name(), cityResponse.postcode().postalCode(), cityResponse.postcode().mainName().equals(cityResponse.postcode().name()));
-            cities.add(cityRecord);
+            City city = new City(cityResponse.postcode().name(), cityResponse.postcode().postalCode(), cityResponse.postcode().mainName().equals(cityResponse.postcode().name()));
+            cities.add(city);
         }
         return cities;
     }

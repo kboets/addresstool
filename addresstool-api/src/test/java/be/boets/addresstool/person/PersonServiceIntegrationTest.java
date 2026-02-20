@@ -55,25 +55,25 @@ class PersonServiceIntegrationTest {
 
     @Test
     void savePerson() {
-        CityEntity cityEntity = CityEntity.CityBuilder.aCity()
+        CityEntity cityEntity = CityEntity.CityEntityBuilder.aCityEntity()
                 .withName("Averbode")
                 .withPostalCode("3271").build();
-        AddressEntity addressEntity = AddressEntity.AddressBuilder.anAddress()
+        AddressEntity addressEntity = AddressEntity.AddressEntityBuilder.anAddressEntity()
                 .withStreet("Springhaanstraat")
                 .withNumber("72")
-                .withCity(cityEntity)
+                .withCityEntity(cityEntity)
                 .build();
-        PersonEntity john = PersonEntity.PersonBuilder.aPerson()
+        PersonEntity john = PersonEntity.PersonEntityBuilder.aPersonEntity()
                 //.withId(100)
                 .withFirstName("John")
                 .withLastName("Doeh")
                 .withBirthDate(LocalDate.of(1975, 2, 4))
-                .withAddress(addressEntity)
+                .withAddressEntity(addressEntity)
                 .build();
 
-        PersonRecord johnRecord = personMapper.toPersonRecord(john);
+        Person johnRecord = personMapper.toPersonRecord(john);
         underTest.save(johnRecord);
-        List<PersonRecord> allPersons = underTest.getAllPersons();
+        List<Person> allPersons = underTest.getAllPersons();
         assertThat(allPersons).hasSize(5);
     }
 
@@ -83,7 +83,7 @@ class PersonServiceIntegrationTest {
                 SearchCriteriaBuilder.aSearchCriteria()
                 .withCity("Pelt")
                 .build();
-        List<PersonRecord> persons = underTest.search(criteria);
+        List<Person> persons = underTest.search(criteria);
         assertThat(persons).hasSize(2);
         criteria = SearchCriteria.
                 SearchCriteriaBuilder.aSearchCriteria()
@@ -100,7 +100,7 @@ class PersonServiceIntegrationTest {
                 .withCity("Pelt")
                 .withName("Doh")
                 .build();
-        List<PersonRecord> persons = underTest.search(criteria);
+        List<Person> persons = underTest.search(criteria);
         assertThat(persons).hasSize(1);
         assertThat(persons.getFirst().firstName()).isEqualTo("John");
     }
@@ -113,7 +113,7 @@ class PersonServiceIntegrationTest {
                 .withName("Doh")
                 .withStreet("Demerstraat")
                 .build();
-        List<PersonRecord> persons = underTest.search(criteria);
+        List<Person> persons = underTest.search(criteria);
         assertThat(persons).hasSize(1);
         assertThat(persons.getFirst().firstName()).isEqualTo("John");
     }

@@ -76,35 +76,36 @@ public class AddressEntity implements Serializable {
                 '}';
     }
 
-    public static final class AddressBuilder {
+
+    public static final class AddressEntityBuilder {
         private String street;
         private String number;
         private String box;
         private CityEntity cityEntity;
 
-        private AddressBuilder() {
+        private AddressEntityBuilder() {
         }
 
-        public static AddressBuilder anAddress() {
-            return new AddressBuilder();
+        public static AddressEntityBuilder anAddressEntity() {
+            return new AddressEntityBuilder();
         }
 
-        public AddressBuilder withStreet(String street) {
+        public AddressEntityBuilder withStreet(String street) {
             this.street = street;
             return this;
         }
 
-        public AddressBuilder withNumber(String number) {
+        public AddressEntityBuilder withNumber(String number) {
             this.number = number;
             return this;
         }
 
-        public AddressBuilder withBox(String box) {
+        public AddressEntityBuilder withBox(String box) {
             this.box = box;
             return this;
         }
 
-        public AddressBuilder withCity(CityEntity cityEntity) {
+        public AddressEntityBuilder withCityEntity(CityEntity cityEntity) {
             this.cityEntity = cityEntity;
             return this;
         }
@@ -114,7 +115,7 @@ public class AddressEntity implements Serializable {
             addressEntity.setStreet(street);
             addressEntity.setNumber(number);
             addressEntity.setBox(box);
-            addressEntity.setCity(cityEntity);
+            addressEntity.cityEntity = this.cityEntity;
             return addressEntity;
         }
     }

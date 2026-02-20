@@ -25,28 +25,28 @@ public class AddressController {
     }
 
     @GetMapping("/cityByPostalCode/{postcode}")
-    public ResponseEntity<List<CityRecord>> findByPostalCode(@PathVariable String postcode) {
+    public ResponseEntity<List<City>> findByPostalCode(@PathVariable String postcode) {
         return ResponseEntity.ok(addressService.findByZipCode(postcode));
     }
 
     @GetMapping("/cityByName/{cityName}")
-    public ResponseEntity<List<CityRecord>> findByCityName(@PathVariable String cityName) {
+    public ResponseEntity<List<City>> findByCityName(@PathVariable String cityName) {
         return ResponseEntity.ok(addressService.findByCityName(cityName));
     }
 
     @GetMapping("/cityNamesByPostalCode/{postalCode}")
     public ResponseEntity<List<String>> findCityNamesByPostalCode(@PathVariable String postalCode) {
-        List<CityRecord> cities = addressService.findByZipCode(postalCode);
-        Set<String> cityNames = new HashSet<>(cities.stream().map(CityRecord::name).toList());
+        List<City> cities = addressService.findByZipCode(postalCode);
+        Set<String> cityNames = new HashSet<>(cities.stream().map(City::name).toList());
         return ResponseEntity.ok(new ArrayList<>(cityNames));
     }
 
     @GetMapping("/postalCodeByCityName/{cityName}")
     public ResponseEntity<String> findPostalCodeByCityName(@PathVariable String cityName) {
-        List<CityRecord> cities = addressService.findByCityName(cityName);
-        for(CityRecord cityRecord : cities) {
-            if (cityRecord.name().equalsIgnoreCase(cityName)) {
-                return ResponseEntity.ok(cityRecord.postalCode());
+        List<City> cities = addressService.findByCityName(cityName);
+        for(City city : cities) {
+            if (city.name().equalsIgnoreCase(cityName)) {
+                return ResponseEntity.ok(city.postalCode());
             }
         }
         return ResponseEntity.ok(cities.getFirst().postalCode());
