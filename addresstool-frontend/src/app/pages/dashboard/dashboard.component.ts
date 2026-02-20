@@ -95,7 +95,7 @@ export class DashboardComponent implements OnInit {
         this.getCityNames();
       }
     });
-    this.searchForm.get('postalCode')?.valueChanges.subscribe((value) => {
+    this.searchForm.get('postalCode')?.valueChanges.subscribe(() => {
       if (this.searchForm.get('city')?.value !== undefined && this.searchForm.get('city')?.value !== '') {
         this.searchForm.patchValue({city: ''});
       }

@@ -1,6 +1,5 @@
 package be.boets.addresstool.search;
 
-import be.boets.addresstool.person.PersonMapper;
 import be.boets.addresstool.person.PersonRecord;
 import be.boets.addresstool.person.PersonService;
 import org.springframework.web.bind.annotation.PostMapping;

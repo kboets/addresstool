@@ -180,7 +180,7 @@ export class ListComponent implements OnInit {
         this.getCityNames();
       }
     });
-    this.personForm.get('addressRecord.cityRecord.postalCode')?.valueChanges.subscribe((value) => {
+    this.personForm.get('addressRecord.cityRecord.postalCode')?.valueChanges.subscribe(() => {
       if (
         this.personForm.get('addressRecord.cityRecord.name')?.value !== undefined &&
         this.personForm.get('addressRecord.cityRecord.name')?.value !== ''
