@@ -1,6 +1,6 @@
 package be.boets.addresstool.search;
 
-import be.boets.addresstool.person.Person;
+import be.boets.addresstool.person.PersonEntity;
 import jakarta.persistence.criteria.JoinType;
 import jakarta.persistence.criteria.Path;
 import jakarta.persistence.criteria.Predicate;
@@ -12,7 +12,7 @@ import java.util.List;
 
 public class SearchSpecs {
 
-    public static Specification<Person> searchByCriteria(SearchCriteria criteria) {
+    public static Specification<PersonEntity> searchByCriteria(SearchCriteria criteria) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -21,11 +21,11 @@ public class SearchSpecs {
             addLikePredicate(predicates, cb, root.get("firstName"), criteria.firstName());
 
             // 2. Joins (Crucial for performance and avoiding Cartesian products)
-            var address = root.join("address", JoinType.LEFT);
-            var city = address.join("city", JoinType.LEFT);
+            var address = root.join("addressEntity", JoinType.LEFT);
+            var city = address.join("cityEntity", JoinType.LEFT);
 
             addLikePredicate(predicates, cb, address.get("street"), criteria.street());
-            addLikePredicate(predicates, cb, address.get("number"), criteria.number() != null ? criteria.number().toString() : null);
+            addLikePredicate(predicates, cb, address.get("number"), criteria.number() != null ? criteria.number() : null);
             addLikePredicate(predicates, cb, city.get("postalCode"), criteria.postalCode());
             addLikePredicate(predicates, cb, city.get("name"), criteria.city());
 

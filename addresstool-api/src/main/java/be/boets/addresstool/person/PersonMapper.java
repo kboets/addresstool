@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = AddressMapper.class)
 public interface PersonMapper {
     @Mapping(source = "address", target = "addressRecord")
-    PersonRecord toPersonRecord(Person person);
+    PersonRecord toPersonRecord(PersonEntity personEntity);
     @Mapping(source = "addressRecord", target = "address")
-    Person toPerson(PersonRecord personRecord);
-    List<PersonRecord> toPersonsRecord(List<Person> persons);
-    List<Person> toPersons(List<PersonRecord> personRecords);
+    PersonEntity toPerson(PersonRecord personRecord);
+    List<PersonRecord> toPersonsRecord(List<PersonEntity> persons);
+    List<PersonEntity> toPersons(List<PersonRecord> personRecords);
 }

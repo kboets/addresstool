@@ -22,11 +22,11 @@ public class PersonService {
 
     public void save(PersonRecord personRecord) {
         PersonRecord upperCasePerson = upperFirstCharacter(personRecord);
-        Person person = personMapper.toPerson(upperCasePerson);
-        if (person.getId() == null) {
-            personDao.save(person);
+        PersonEntity personEntity = personMapper.toPerson(upperCasePerson);
+        if (personEntity.getId() == null) {
+            personDao.save(personEntity);
         } else{
-            personDao.update(person);
+            personDao.update(personEntity);
         }
     }
 
@@ -39,7 +39,7 @@ public class PersonService {
     }
 
     public Optional<PersonRecord> getById(int id) {
-        Optional<Person> person = personDao.getById(id);
+        Optional<PersonEntity> person = personDao.getById(id);
         return person.map(personMapper::toPersonRecord);
     }
 

@@ -5,17 +5,17 @@ import jakarta.persistence.Column;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class City implements Serializable {
+public class CityEntity implements Serializable {
     @Column(name = "city_name", nullable = false)
     private String name;
 
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
 
-    protected City() {
+    protected CityEntity() {
     }
 
-    public City(String name, String postalCode) {
+    public CityEntity(String name, String postalCode) {
         this.name = name;
         this.postalCode = postalCode;
     }
@@ -47,8 +47,8 @@ public class City implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        City city = (City) o;
-        return Objects.equals(name, city.name) && Objects.equals(postalCode, city.postalCode);
+        CityEntity cityEntity = (CityEntity) o;
+        return Objects.equals(name, cityEntity.name) && Objects.equals(postalCode, cityEntity.postalCode);
     }
 
     @Override
@@ -77,11 +77,11 @@ public class City implements Serializable {
             return this;
         }
 
-        public City build() {
-            City city = new City();
-            city.setName(name);
-            city.setPostalCode(postalCode);
-            return city;
+        public CityEntity build() {
+            CityEntity cityEntity = new CityEntity();
+            cityEntity.setName(name);
+            cityEntity.setPostalCode(postalCode);
+            return cityEntity;
         }
     }
 }

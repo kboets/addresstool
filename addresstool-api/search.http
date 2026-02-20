@@ -9,7 +9,7 @@ Accept: application/json
   "street": null,
   "number": 0,
   "postalCode": null,
-  "city": null
+  "cityEntity": null
 }
 ### POST /search with SearchCriteria record -> return 2 elements
 POST http://localhost:8080/addresstool/api/search
@@ -22,5 +22,5 @@ Accept: application/json
 "street": null,
 "number": 0,
 "postalCode": null,
-"city": "Averbode"
+"cityEntity": "Averbode"
 }

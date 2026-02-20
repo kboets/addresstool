@@ -1,7 +1,7 @@
 package be.boets.addresstool.search;
 
 public record SearchCriteria(String firstName, String name,
-                             String street, Integer number,
+                             String street, String number,
                              String postalCode, String city) {
 
 
@@ -9,7 +9,7 @@ public record SearchCriteria(String firstName, String name,
         private String firstName;
         private String name;
         private String street;
-        private Integer number;
+        private String number;
         private String postalCode;
         private String city;
 
@@ -35,7 +35,7 @@ public record SearchCriteria(String firstName, String name,
             return this;
         }
 
-        public SearchCriteriaBuilder withNumber(Integer number) {
+        public SearchCriteriaBuilder withNumber(String number) {
             this.number = number;
             return this;
         }

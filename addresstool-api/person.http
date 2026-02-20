@@ -1,4 +1,4 @@
-### POST /SAVE person
+### POST /SAVE personEntity
 POST http://localhost:8080/addresstool/api/person
 Content-Type: application/json
 Accept: application/json
@@ -26,7 +26,7 @@ GET http://localhost:8080/addresstool/api/person/all
 ### GET /getbyId
 GET http://localhost:8080/addresstool/api/person/8
 
-### PUT /update person
+### PUT /update personEntity
 PUT http://localhost:8080/addresstool/api/person
 Content-Type: application/json
 Accept: application/json
@@ -48,5 +48,5 @@ Accept: application/json
   }
 }
 
-### DELETE /deleteById person
+### DELETE /deleteById personEntity
 DELETE http://localhost:8080/addresstool/api/person/8

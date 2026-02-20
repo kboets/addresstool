@@ -6,20 +6,20 @@ import jakarta.persistence.Embedded;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Address implements Serializable {
+public class AddressEntity implements Serializable {
     @Column(name = "street", nullable = false)
     private String street;
 
     @Column(name = "number", nullable = false)
-    private int number;
+    private String number;
 
     @Column(name = "box")
     private String box;
 
     @Embedded
-    private City city;
+    private CityEntity cityEntity;
 
-    public Address() {
+    public AddressEntity() {
     }
 
     public String getStreet() {
@@ -30,11 +30,11 @@ public class Address implements Serializable {
         this.street = street;
     }
 
-    public int getNumber() {
+    public String getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
+    public void setNumber(String number) {
         this.number = number;
     }
 
@@ -46,24 +46,24 @@ public class Address implements Serializable {
         this.box = box;
     }
 
-    public City getCity() {
-        return city;
+    public CityEntity getCity() {
+        return cityEntity;
     }
 
-    public void setCity(City city) {
-        this.city = city;
+    public void setCity(CityEntity cityEntity) {
+        this.cityEntity = cityEntity;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Address address = (Address) o;
-        return number == address.number && Objects.equals(street, address.street) && Objects.equals(box, address.box) && Objects.equals(city, address.city);
+        AddressEntity addressEntity = (AddressEntity) o;
+        return Objects.equals(number, addressEntity.number) && Objects.equals(street, addressEntity.street) && Objects.equals(box, addressEntity.box) && Objects.equals(cityEntity, addressEntity.cityEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(street, number, box, city);
+        return Objects.hash(street, number, box, cityEntity);
     }
 
     @Override
@@ -72,15 +72,15 @@ public class Address implements Serializable {
                 "street='" + street + '\'' +
                 ", number=" + number +
                 ", box='" + box + '\'' +
-                ", city=" + city +
+                ", city=" + cityEntity +
                 '}';
     }
 
     public static final class AddressBuilder {
         private String street;
-        private int number;
+        private String number;
         private String box;
-        private City city;
+        private CityEntity cityEntity;
 
         private AddressBuilder() {
         }
@@ -94,7 +94,7 @@ public class Address implements Serializable {
             return this;
         }
 
-        public AddressBuilder withNumber(int number) {
+        public AddressBuilder withNumber(String number) {
             this.number = number;
             return this;
         }
@@ -104,18 +104,18 @@ public class Address implements Serializable {
             return this;
         }
 
-        public AddressBuilder withCity(City city) {
-            this.city = city;
+        public AddressBuilder withCity(CityEntity cityEntity) {
+            this.cityEntity = cityEntity;
             return this;
         }
 
-        public Address build() {
-            Address address = new Address();
-            address.setStreet(street);
-            address.setNumber(number);
-            address.setBox(box);
-            address.setCity(city);
-            return address;
+        public AddressEntity build() {
+            AddressEntity addressEntity = new AddressEntity();
+            addressEntity.setStreet(street);
+            addressEntity.setNumber(number);
+            addressEntity.setBox(box);
+            addressEntity.setCity(cityEntity);
+            return addressEntity;
         }
     }
 }

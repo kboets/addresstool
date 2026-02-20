@@ -1,9 +1,9 @@
 package be.boets.addresstool.person;
 
 import be.boets.addresstool.SharedPostgressContainer;
-import be.boets.addresstool.address.Address;
+import be.boets.addresstool.address.AddressEntity;
 import be.boets.addresstool.address.AddressMapperImpl;
-import be.boets.addresstool.address.City;
+import be.boets.addresstool.address.CityEntity;
 import be.boets.addresstool.address.CityMapperImpl;
 import be.boets.addresstool.search.SearchCriteria;
 import org.junit.jupiter.api.AfterEach;
@@ -55,20 +55,20 @@ class PersonServiceIntegrationTest {
 
     @Test
     void savePerson() {
-        City city = City.CityBuilder.aCity()
+        CityEntity cityEntity = CityEntity.CityBuilder.aCity()
                 .withName("Averbode")
                 .withPostalCode("3271").build();
-        Address address = Address.AddressBuilder.anAddress()
+        AddressEntity addressEntity = AddressEntity.AddressBuilder.anAddress()
                 .withStreet("Springhaanstraat")
-                .withNumber(72)
-                .withCity(city)
+                .withNumber("72")
+                .withCity(cityEntity)
                 .build();
-        Person john = Person.PersonBuilder.aPerson()
+        PersonEntity john = PersonEntity.PersonBuilder.aPerson()
                 //.withId(100)
                 .withFirstName("John")
                 .withLastName("Doeh")
                 .withBirthDate(LocalDate.of(1975, 2, 4))
-                .withAddress(address)
+                .withAddress(addressEntity)
                 .build();
 
         PersonRecord johnRecord = personMapper.toPersonRecord(john);

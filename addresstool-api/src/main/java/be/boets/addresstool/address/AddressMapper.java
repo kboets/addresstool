@@ -8,11 +8,11 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = CityMapper.class)
 public interface AddressMapper {
     @Mapping(source = "cityRecord", target = "city")
-    Address toAddress(AddressRecord addressRecord);
+    AddressEntity toAddress(AddressRecord addressRecord);
     @Mapping(source = "city", target = "cityRecord")
-    AddressRecord toAddressRecord(Address address);
+    AddressRecord toAddressRecord(AddressEntity addressEntity);
 
-    List<AddressRecord> toAddressesRecord(List<Address> addresses);
+    List<AddressRecord> toAddressesRecord(List<AddressEntity> addressEntities);
 
-    List<Address> toAddresses(List<AddressRecord> addressRecords);
+    List<AddressEntity> toAddresses(List<AddressRecord> addressRecords);
 }

@@ -23,7 +23,7 @@
 
   <h3 translate>Zoek scherm</h3>
 
-  <form [formGroup]="searchForm" class="address-form">
+  <form [formGroup]="searchForm" class="addressEntity-form">
     <div class="row row-space mt-2">
       <div class="col-2">
         <label for="firstName">Voornaam</label>
@@ -37,10 +37,10 @@
     <!-- gemeente + postcode -->
     <div class="row row-space mt-2">
       <div class="col-4">
-        <label for="city">Gemeente</label>
-        <input id="city"
+        <label for="cityEntity">Gemeente</label>
+        <input id="cityEntity"
                type="text"
-               formControlName="city"
+               formControlName="cityEntity"
                class="form-control"
                (input)="onCitySelected($event)"
                autocomplete="off"
@@ -70,7 +70,7 @@
     <div class="row row-space mt-2">
       <div class="col-4">
         <label for="street">Straat</label>
-        <input id="city"
+        <input id="cityEntity"
                type="text"
                formControlName="street"
                class="form-control"
@@ -115,10 +115,10 @@
             <tr>
               <td>{{ person.firstName }}</td>
               <td>{{ person.lastName }}</td>
-              <td>{{ person.address?.street }}</td>
-              <td>{{ person.address?.number }}</td>
-              <td>{{ person.address?.city?.postalCode }}</td>
-              <td>{{ person.address?.city?.name }}</td>
+              <td>{{ person.addressEntity?.street }}</td>
+              <td>{{ person.addressEntity?.number }}</td>
+              <td>{{ person.addressEntity?.cityEntity?.postalCode }}</td>
+              <td>{{ person.addressEntity?.cityEntity?.name }}</td>
             </tr>
 
           } @empty {

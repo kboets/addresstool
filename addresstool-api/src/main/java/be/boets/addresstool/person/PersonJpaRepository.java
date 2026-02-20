@@ -18,23 +18,23 @@ public class PersonJpaRepository implements PersonDao {
     }
 
     @Override
-    public List<Person> getAll() {
+    public List<PersonEntity> getAll() {
         return personRepository.findAll();
     }
 
     @Override
-    public Optional<Person> getById(int id) {
+    public Optional<PersonEntity> getById(int id) {
         return personRepository.findById(id);
     }
 
     @Override
-    public void save(Person person) {
-        personRepository.save(person);
+    public void save(PersonEntity personEntity) {
+        personRepository.save(personEntity);
     }
 
     @Override
-    public void delete(Person person) {
-        personRepository.delete(person);
+    public void delete(PersonEntity personEntity) {
+        personRepository.delete(personEntity);
     }
 
     @Override
@@ -48,13 +48,13 @@ public class PersonJpaRepository implements PersonDao {
     }
 
     @Override
-    public void update(Person person) {
-        personRepository.save(person);
+    public void update(PersonEntity personEntity) {
+        personRepository.save(personEntity);
     }
 
     @Override
-    public List<Person> search(SearchCriteria searchCriteria) {
-        Specification<Person> spec = SearchSpecs.searchByCriteria(searchCriteria);
+    public List<PersonEntity> search(SearchCriteria searchCriteria) {
+        Specification<PersonEntity> spec = SearchSpecs.searchByCriteria(searchCriteria);
         return personRepository.findAll(spec);
     }
 

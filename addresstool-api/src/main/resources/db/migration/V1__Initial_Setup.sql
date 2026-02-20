@@ -6,7 +6,7 @@ CREATE TABLE person(
                        first_name VARCHAR NOT NULL,
                        birth_date DATE NOT NULL,
                        street VARCHAR NOT NULL,
-                       number NUMERIC NOT NULL,
+                       number VARCHAR NOT NULL,
                        box VARCHAR,
                        postal_code VARCHAR NOT NULL,
                        city_name VARCHAR NOT NULL

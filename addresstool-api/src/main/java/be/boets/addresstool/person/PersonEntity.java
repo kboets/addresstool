@@ -1,6 +1,6 @@
 package be.boets.addresstool.person;
 
-import be.boets.addresstool.address.Address;
+import be.boets.addresstool.address.AddressEntity;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.Objects;
         name = "person",
         schema = "addresstool"
 )
-public class Person implements Serializable {
+public class PersonEntity implements Serializable {
     @Id
     @SequenceGenerator(
             name = "person_id_seq",
@@ -30,9 +30,9 @@ public class Person implements Serializable {
     @Column(nullable = false)
     private LocalDate birthDate;
     @Embedded
-    private Address address;
+    private AddressEntity addressEntity;
 
-    public Person() {
+    public PersonEntity() {
     }
 
     public Integer getId() {
@@ -67,24 +67,24 @@ public class Person implements Serializable {
         this.birthDate = birthDate;
     }
 
-    public Address getAddress() {
-        return address;
+    public AddressEntity getAddress() {
+        return addressEntity;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setAddress(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        Person person = (Person) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(birthDate, person.birthDate) && Objects.equals(address, person.address);
+        PersonEntity person = (PersonEntity) o;
+        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(birthDate, person.birthDate) && Objects.equals(addressEntity, person.addressEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, birthDate, address);
+        return Objects.hash(id, firstName, lastName, birthDate, addressEntity);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class Person implements Serializable {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
-                ", address=" + address +
+                ", address=" + addressEntity +
                 '}';
     }
 
@@ -103,7 +103,7 @@ public class Person implements Serializable {
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
-        private Address address;
+        private AddressEntity addressEntity;
 
         private PersonBuilder() {
         }
@@ -132,19 +132,19 @@ public class Person implements Serializable {
             return this;
         }
 
-        public PersonBuilder withAddress(Address address) {
-            this.address = address;
+        public PersonBuilder withAddress(AddressEntity addressEntity) {
+            this.addressEntity = addressEntity;
             return this;
         }
 
-        public Person build() {
-            Person person = new Person();
-            person.setId(id);
-            person.setFirstName(firstName);
-            person.setLastName(lastName);
-            person.setBirthDate(birthDate);
-            person.setAddress(address);
-            return person;
+        public PersonEntity build() {
+            PersonEntity personEntity = new PersonEntity();
+            personEntity.setId(id);
+            personEntity.setFirstName(firstName);
+            personEntity.setLastName(lastName);
+            personEntity.setBirthDate(birthDate);
+            personEntity.setAddress(addressEntity);
+            return personEntity;
         }
     }
 }
