@@ -96,7 +96,7 @@
 
   </form>
 
-  @if (persons()?.length > 0) {
+  @if (shouldShowPersons) {
     <div class="mt-3">
       <table class="user-table">
         <thead>
@@ -108,7 +108,7 @@
         </tr>
         </thead>
         <tbody>
-          @for (person of persons(); track person.lastName) {
+          @for (person of persons(); track person.id) {
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{person.birthDate | date: 'dd/MM/yyyy'}}</td>
@@ -118,13 +118,15 @@
 
           } @empty {
             <tr>
-              <td colspan="6" style="text-align: center">Nothing found</td>
+              <td colspan="3" style="text-align: center">Niemand gevonden in het bestand</td>
+              <td><button type="button" class="btn btn-outline-primary btn-sm" (click)="onAdd()">Voeg toe</button></td>
             </tr>
           }
         </tbody>
       </table>
     </div>
   }
+
 
 
 </section>

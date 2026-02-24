@@ -35,6 +35,7 @@ export class DashboardComponent implements OnInit {
   searchError = this.searchService.searchError;
 
   searchForm: FormGroup;
+  shouldShowPersons: boolean;
 
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
@@ -62,19 +63,25 @@ export class DashboardComponent implements OnInit {
       }
       );
 
-
-
     effect(() => {
       const code = this.postalCode();
       if (code) {
         this.searchForm.get('postalCode')?.setValue(code, {emitEvent: false});
       }
     });
+
+    this.shouldShowPersons = false;
   }
 
   onEdit(person: Person) {
     this.router.navigate(['/users'], {
       queryParams: { personId: person.id },
+    });
+  }
+
+  onAdd() {
+    this.router.navigate(['/users'], {
+      queryParams: { personId: null },
     });
   }
 
@@ -97,6 +104,7 @@ export class DashboardComponent implements OnInit {
     this.addressService.resetCityName();
     this.addressService.resetStreetNames();
     this.searchService.clearSearch();
+    this.shouldShowPersons = false;
   }
 
   private onPostalCodeChange(): void {
@@ -112,7 +120,6 @@ export class DashboardComponent implements OnInit {
     })
   }
 
-
   onCitySelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const cityName = input.value;
@@ -124,6 +131,7 @@ export class DashboardComponent implements OnInit {
   onSubmit(): void {
     const searchCriteria = this.searchForm.value as SearchCriteria;
     this.searchService.search(searchCriteria);
+    this.shouldShowPersons = true;
   }
 
   private getCityNames() {
