@@ -1,0 +1,16 @@
+name: my first workflow
+on:
+  push:
+    branches:
+      - main
+jobs:
+  myFirstJob:
+    runs-on: ubuntu-latest
+    steps:
+      - name: My First Step
+        run: printenv         
+      - name: My second Command
+        run: |
+          echo "Address tool "
+          echo "2"
+          ls
