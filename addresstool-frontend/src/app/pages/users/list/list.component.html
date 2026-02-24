@@ -1,7 +1,7 @@
 <section class="main-container">
 <!--  <h2>{{ isEditing ? 'Voeg toe' : 'Update' }}</h2>-->
 
-  <form [formGroup]="personForm" class="addressEntity-form">
+  <form [formGroup]="personForm" class="addressEntity-form" (ngSubmit)="onSubmit()">
     <div>
       <h4>Persoons gegevens</h4>
       <div class="row row-space mt-2">
@@ -28,12 +28,12 @@
         <div class="row row-space mt-2 form-section" formGroupName="city">
           <div class="col-4">
             <div class="form-group">
-              <label for="cityEntity">Gemeente</label>
+              <label for="city">Gemeente</label>
               <input
-                id="cityEntity"
+                id="city"
                 type="text"
                 formControlName="name"
-                (input)="onCitySelected($event)"
+                (change)="onCitySelected($event)"
                 autocomplete="off"
                 [attr.list]="'cityList-' + cityNames()?.length"
               />
@@ -48,7 +48,7 @@
           <div class="col-1">
             <div class="form-group">
               <label for="postalCode">Postcode</label>
-              <input id="postalCode" type="text" inputmode="numeric" pattern="[0-9]*" formControlName="postalCode" />
+              <input id="postalCode" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]*" formControlName="postalCode" />
             </div>
           </div>
         </div>
@@ -87,44 +87,47 @@
     </div>
 
     <div class="btn-group mt-3" role="group">
-      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="personForm.invalid">{{ isEditing ? 'Update' : 'Voeg toe' }}</button>
+      <button type="submit" class="btn btn-primary"  [disabled]="personForm.invalid">{{ isEditing ? 'Update' : 'Voeg toe' }}</button>
       <button type="button" class="btn btn-outline-secondary ms-1" (click)="resetForm()">Reset</button>
     </div>
   </form>
 
   <hr />
 
-<!--  <h4 class="mt-5">Overzicht</h4>-->
-<!--  <div class="user-table-container">-->
-<!--    <table class="user-table">-->
-<!--      <thead>-->
-<!--        <tr>-->
-<!--          <th>Name</th>-->
-<!--          <th>Birth Date</th>-->
-<!--          <th>Address</th>-->
-<!--          <th>Actions</th>-->
-<!--        </tr>-->
-<!--      </thead>-->
-<!--      <tbody>-->
-<!--        @for (person of people; track person.id) {-->
-<!--        <tr>-->
-<!--          <td>{{ person.firstName }} {{ person.lastName }}</td>-->
-<!--          <td>{{ person.birthDate }}</td>-->
-<!--          <td>-->
-<!--            {{ person.addressEntity.street }} {{ person.addressEntity.number }}{{ person.addressEntity.box ? '/' + person.addressEntity.box : '' }},-->
-<!--            {{ person.addressEntity.cityEntity.postalCode }} {{ person.addressEntity.cityEntity.name }}-->
-<!--          </td>-->
-<!--          <td>-->
-<!--            <button (click)="editPerson(person)">Edit</button>-->
-<!--            <button (click)="deletePerson(person.id!)">Delete</button>-->
-<!--          </td>-->
-<!--        </tr>-->
-<!--        } @empty {-->
-<!--        <tr>-->
-<!--          <td colspan="4" style="text-align: center">No people in the list</td>-->
-<!--        </tr>-->
-<!--        }-->
-<!--      </tbody>-->
-<!--    </table>-->
-<!--  </div>-->
+  @if (shouldShowPeople) {
+    <h4 class="mt-5">Overzicht</h4>
+    <div class="user-table-container">
+      <table class="user-table">
+        <thead>
+        <tr>
+          <th>Naam</th>
+          <th>Geboortedatum</th>
+          <th>Adres</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (person of people; track person.id) {
+            <tr>
+              <td>{{ person.firstName }} {{ person.lastName }}</td>
+              <td>{{ person.birthDate | date: 'dd/MM/yyyy'}}</td>
+              <td>
+                {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }},
+                {{ person.address.city.postalCode }} {{ person.address.city.name }}
+              </td>
+              <td>
+                <button (click)="editPerson(person)">Edit</button>
+                <button (click)="deletePerson(person.id!)">Delete</button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" style="text-align: center">No people in the list</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
 </section>

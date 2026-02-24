@@ -23,7 +23,7 @@
 
   <h3 translate>Zoek scherm</h3>
 
-  <form [formGroup]="searchForm" class="addressEntity-form">
+  <form [formGroup]="searchForm" class="addressEntity-form" (ngSubmit)="onSubmit()">
     <div class="row row-space mt-2">
       <div class="col-2">
         <label for="firstName">Voornaam</label>
@@ -90,7 +90,7 @@
     </div>
 
     <div class="btn-group mt-3" role="group">
-      <button type="button" class="btn btn-primary" (click)="onSubmit()" [disabled]="!searchForm.valid">Zoek op</button>
+      <button type="submit" class="btn btn-primary"  [disabled]="!searchForm.valid">Zoek op</button>
       <button type="button" class="btn btn-outline-secondary ms-1" (click)="initForm()">Reset</button>
     </div>
 
@@ -102,22 +102,18 @@
         <thead>
         <tr>
           <th>Naam</th>
+          <th>Geboorte datum</th>
           <th>Adres</th>
           <th></th>
-<!--          <th>Number</th>-->
-<!--          <th>Postal Code</th>-->
-<!--          <th>City</th>-->
         </tr>
         </thead>
         <tbody>
           @for (person of persons(); track person.lastName) {
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
-              <td>{{ person.address?.street }} {{ person.address?.number }}, {{ person.address?.city?.postalCode }} {{ person.address?.city?.name }}</td>
+              <td>{{person.birthDate | date: 'dd/MM/yyyy'}}</td>
+              <td>{{ person.address?.street }} {{ person.address?.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address?.city?.postalCode }} {{ person.address?.city?.name }}</td>
               <td><button type="button" class="btn btn-outline-primary btn-sm" (click)="onEdit(person)">Wijzig</button></td>
-<!--              <td></td>-->
-<!--              <td></td>-->
-<!--              <td></td>-->
             </tr>
 
           } @empty {

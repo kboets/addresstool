@@ -4,6 +4,7 @@ import { HotToastService } from '@ngxpert/hot-toast';
 import { AddressService } from '@shared/services/address-service';
 import { UserService } from '../user-service';
 import {Person} from "@shared/models/person";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-list',
@@ -14,6 +15,9 @@ import {Person} from "@shared/models/person";
 export class ListComponent implements OnInit {
   private addressService = inject(AddressService);
   private personService = inject(UserService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+
   // cities name signals
   cityNames = this.addressService.cityNames;
   cityNamesError = this.addressService.cityNamesError;
@@ -29,6 +33,7 @@ export class ListComponent implements OnInit {
   isLoading = false;
   isEditing = false;
   currentPersonId?: number;
+  shouldShowPeople: boolean;
 
   private readonly _fb = inject(FormBuilder);
   private readonly _toast = inject(HotToastService);
@@ -53,30 +58,63 @@ export class ListComponent implements OnInit {
       const code = this.postalCode();
       if (code) {
         this.personForm.get('address.city.postalCode')?.setValue(code, { emitEvent: false });
-      } else {
-        console.log('postal code is undefined');
       }
     });
+    this.shouldShowPeople = false;
   }
 
   ngOnInit() {
-    this.loadPeople();
     this.onPostalCodeChange();
+
+    this.route.queryParamMap.subscribe((params) => {
+      const personId = params.get('personId');
+      const editId = personId ? Number(personId) : null;
+      if (!editId || Number.isNaN(editId)) return;
+
+      this.personService.getById(editId).subscribe({
+        next: (person: Person) => {
+          this.editPerson(person);
+          this.clearEditQueryParam();
+        },
+        error: () => {
+          this._toast.error('Persoon werd niet gevonden');
+          this.clearEditQueryParam();
+        },
+      });
+    });
+
   }
 
-  loadPeople() {
+  loadPeople(person? : Person) {
     this.isLoading = true;
-    this.personService.getAllPersons().subscribe({
-      next: (people) => {
-        this.people = people;
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Error loading people', error);
-        this._toast.error('Failed to load people');
-        this.isLoading = false;
-      },
-    });
+    if (person) {
+      this.personService.getById(this.currentPersonId).subscribe({
+        next: (person: Person) => {
+          this.people = [person];
+          this.isLoading = false;
+          this.shouldShowPeople = true;
+        },
+        error: (error) => {
+          this._toast.error('Kan persoon niet laden. Fout: ',error);
+          this.isLoading = false;
+          this.shouldShowPeople = false;
+        },
+      })
+    } else {
+      this.personService.getAllPersons().subscribe({
+        next: (people) => {
+          this.people = people;
+          this.isLoading = false;
+          this.shouldShowPeople = true;
+        },
+        error: (error) => {
+          this._toast.error('Kan personen niet laden. Probeer het later opnieuw.');
+          this.isLoading = false;
+          this.shouldShowPeople = false;
+        },
+      });
+    }
+
   }
 
   onSubmit() {
@@ -86,34 +124,37 @@ export class ListComponent implements OnInit {
         const personToUpdate = { ...personData, id: this.currentPersonId };
         this.personService.update(personToUpdate).subscribe({
           next: () => {
-            this._toast.success('Person updated successfully');
-            this.loadPeople();
+            this._toast.success('Persoon succesvol gewijzigd.');
+            this.loadPeople(personData as Person);
             this.resetForm();
           },
           error: (error) => {
-            console.error('Error updating person', error);
-            this._toast.error('Failed to update person');
+            this._toast.error('Fout opgetreden tijdens wijzigen.');
           },
         });
       } else {
         this.personService.save(personData).subscribe({
           next: () => {
-            this._toast.success('Person added successfully');
-            this.loadPeople();
+            this._toast.success('Persoon succesvol toegevoegd.');
             this.resetForm();
+            this.loadPeople();
           },
           error: (error) => {
-            console.error('Error adding person', error);
-            this._toast.error('Failed to add person');
+            this._toast.error('Fout opgetreden tijdens toevoegen. Fout boodschap: ' + error.error.message + '.');
           },
         });
       }
     } else {
-      this._toast.error('Please fill in all required fields');
+      this._toast.error('Vul al de verplichte velden in.');
     }
   }
 
   onCitySelected(event: Event): void {
+    if (this.isEditing) {
+      this.addressService.resetCityName();
+      this.addressService.resetPostalCode();
+      this.personForm.patchValue({ address: { city: { postalCode: '' }, street: '' } });
+    }
     const input = event.target as HTMLInputElement;
     const cityName = input.value;
     if (cityName) {
@@ -131,7 +172,7 @@ export class ListComponent implements OnInit {
     this.personService.deleteById(id).subscribe({
       next: () => {
         this._toast.success('Person deleted');
-        this.loadPeople();
+        //this.loadPeople();
       },
       error: (error) => {
         console.error('Error deleting person', error);
@@ -152,6 +193,9 @@ export class ListComponent implements OnInit {
     this.currentPersonId = undefined;
     this.addressService.resetPostalCode();
     this.addressService.resetCityName();
+    this.addressService.resetStreetNames();
+    this.people = [];
+    this.shouldShowPeople = false;
   }
 
   public initForm(): void {
@@ -194,5 +238,14 @@ export class ListComponent implements OnInit {
     const postalCode = this.personForm.get('address.city.postalCode')?.value;
     console.log('component -> getCityNames: ', postalCode);
     this.addressService.postalCodeSelected(+postalCode);
+  }
+
+  private clearEditQueryParam(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { editId: null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true,
+    });
   }
 }

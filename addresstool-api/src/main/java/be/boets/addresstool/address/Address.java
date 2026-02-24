@@ -1,11 +1,11 @@
 package be.boets.addresstool.address;
 
-public record Address(String street, int number, String box, City city) {
+public record Address(String street, String number, String box, City city) {
 
 
     public static final class AddressBuilder {
         private String street;
-        private int number;
+        private String number;
         private String box;
         private City city;
 
@@ -21,7 +21,7 @@ public record Address(String street, int number, String box, City city) {
             return this;
         }
 
-        public AddressBuilder withNumber(int number) {
+        public AddressBuilder withNumber(String number) {
             this.number = number;
             return this;
         }

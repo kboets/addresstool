@@ -95,6 +95,7 @@ export class DashboardComponent implements OnInit {
     });
     this.addressService.resetPostalCode();
     this.addressService.resetCityName();
+    this.addressService.resetStreetNames();
     this.searchService.clearSearch();
   }
 
