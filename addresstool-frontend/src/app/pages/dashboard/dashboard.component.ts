@@ -5,6 +5,8 @@ import {ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl
 import {AddressService} from "@shared/services/address-service";
 import {SearchService} from "./search-service";
 import {SearchCriteria} from "@shared/models/searchCriteria";
+import {Person} from "@shared/models/person";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-dashboard',
@@ -16,6 +18,7 @@ export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
   private searchService = inject(SearchService);
+  private readonly router = inject(Router);
 
   // cities name signals
   cityNames = this.addressService.cityNames;
@@ -66,6 +69,12 @@ export class DashboardComponent implements OnInit {
       if (code) {
         this.searchForm.get('postalCode')?.setValue(code, {emitEvent: false});
       }
+    });
+  }
+
+  onEdit(person: Person) {
+    this.router.navigate(['/users'], {
+      queryParams: { personId: person.id },
     });
   }
 

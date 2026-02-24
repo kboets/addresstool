@@ -114,7 +114,7 @@
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{ person.address?.street }} {{ person.address?.number }}, {{ person.address?.city?.postalCode }} {{ person.address?.city?.name }}</td>
-              <td><button type="button"  class="btn btn-outline-primary btn-sm">Wijzig</button></td>
+              <td><button type="button" class="btn btn-outline-primary btn-sm" (click)="onEdit(person)">Wijzig</button></td>
 <!--              <td></td>-->
 <!--              <td></td>-->
 <!--              <td></td>-->
