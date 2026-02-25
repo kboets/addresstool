@@ -21,7 +21,7 @@
 		<url/>
 	</scm>
 	<properties>
-		<java.version>24</java.version>
+		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
 		<testcontainer.version>1.21.4</testcontainer.version>
 	</properties>
