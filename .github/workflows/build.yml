@@ -1,1 +1,12 @@
+name: Addresstool workflow
+on:
+  pull_request:
+    branches:
+     - master
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+      run: echo "AddressTool"
