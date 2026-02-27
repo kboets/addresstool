@@ -16,5 +16,5 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
       - name: maven clean verify
-        run: mvn -B -ntp clean verify
+        run: mvn -B clean verify
   
