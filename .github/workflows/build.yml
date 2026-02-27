@@ -9,12 +9,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        run: actions/checkout@v6
+        run: actions/checkout@v4
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
       - name: maven clean verify
-        run: mvn -B clean verify
+        run: mvn -B -ntp clean verify
   
