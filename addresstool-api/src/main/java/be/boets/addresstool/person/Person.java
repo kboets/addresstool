@@ -1,77 +1,53 @@
 package be.boets.addresstool.person;
 
 import be.boets.addresstool.address.Address;
-import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 
-@Entity
-@Table(
-        name = "person",
-        schema = "addresstool"
-)
-public class Person implements Serializable {
-    @Id
-    @SequenceGenerator(
-            name = "person_id_seq",
-            sequenceName = "person_id_seq",
-            schema = "addresstool",
-            allocationSize =  1)
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "person_id_seq")
-    private Integer id;
-    @Column(nullable = false)
-    String firstName;
-    @Column(nullable = false)
-    String lastName;
-    @Column(nullable = false)
-    private LocalDate birthDate;
-    @Embedded
-    private Address address;
+public record Person(Integer id, String firstName, String lastName, LocalDate birthDate, Address address) {
 
-    public Person() {
-    }
 
-    public Integer getId() {
-        return id;
-    }
+    public static final class PersonBuilder {
+        private Integer id;
+        private String firstName;
+        private String lastName;
+        private LocalDate birthDate;
+        private Address address;
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+        private PersonBuilder() {
+        }
 
-    public String getFirstName() {
-        return firstName;
-    }
+        public static PersonBuilder aPerson() {
+            return new PersonBuilder();
+        }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+        public PersonBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
 
-    public String getLastName() {
-        return lastName;
-    }
+        public PersonBuilder withFirstName(String firstName) {
+            this.firstName = firstName;
+            return this;
+        }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+        public PersonBuilder withLastName(String lastName) {
+            this.lastName = lastName;
+            return this;
+        }
 
-    public LocalDate getBirthDate() {
-        return birthDate;
-    }
+        public PersonBuilder withBirthDate(LocalDate birthDate) {
+            this.birthDate = birthDate;
+            return this;
+        }
 
-    public void setBirthDate(LocalDate birthDate) {
-        this.birthDate = birthDate;
-    }
+        public PersonBuilder withAddress(Address address) {
+            this.address = address;
+            return this;
+        }
 
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
+        public Person build() {
+            return new Person(id, firstName, lastName, birthDate, address);
+        }
     }
 }
-

@@ -1,0 +1,13 @@
+spring:
+#  config:
+#    activate:
+#      on-profile: test
+
+  flyway:
+    enabled: true
+    default-schema: addresstool
+    schemas: addresstool
+    locations:
+    - classpath:db/migration
+    - classpath:db/testdata
+

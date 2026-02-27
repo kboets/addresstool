@@ -1,37 +1,37 @@
 package be.boets.addresstool.address;
 
-import jakarta.persistence.Column;
+public record City(String name, String postalCode, boolean isMain) {
 
-import java.io.Serializable;
 
-public class City implements Serializable {
-    @Column(name = "city_name", nullable = false)
-    private String name;
+    public static final class CityBuilder {
+        private String name;
+        private String postalCode;
+        private boolean isMain;
 
-    @Column(name = "postal_code", nullable = false)
-    private String postalCode;
+        private CityBuilder() {
+        }
 
-    protected City() {
-    }
+        public static CityBuilder aCity() {
+            return new CityBuilder();
+        }
 
-    public City(String name, String postalCode) {
-        this.name = name;
-        this.postalCode = postalCode;
-    }
+        public CityBuilder withName(String name) {
+            this.name = name;
+            return this;
+        }
 
-    public String getName() {
-        return name;
-    }
+        public CityBuilder withPostalCode(String postalCode) {
+            this.postalCode = postalCode;
+            return this;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public CityBuilder withIsMain(boolean isMain) {
+            this.isMain = isMain;
+            return this;
+        }
 
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+        public City build() {
+            return new City(name, postalCode, isMain);
+        }
     }
 }

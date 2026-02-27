@@ -21,13 +21,14 @@ export class AddressService {
 
   // selected postal code signal
   selectedPostalCode = signal<number>(undefined);
-  // set the selected postal code when given
+
   public postalCodeSelected(zipCode: number) {
     this.selectedPostalCode.set(zipCode);
   }
   public resetPostalCode() {
     this.selectedPostalCode.set(undefined);
   }
+
   // retrieve all cities from zipcode
   private cityNamesResult$ = toObservable(this.selectedPostalCode)
     .pipe(
@@ -59,7 +60,6 @@ export class AddressService {
 
   //selected city name
   selectedCityName = signal<string>(undefined);
-  // set the selected city name when given
   public cityNameSelected(cityName: string) {
     this.selectedCityName.set(cityName);
   }
@@ -96,14 +96,23 @@ export class AddressService {
 
 
   // ****** retrieve street name with postal code or city name ****** //
+  private streetResetTick = signal(0);
+
+  public resetStreetNames() {
+    this.streetResetTick.update(v => v + 1); // force an emission so streets become []
+  }
+
   private streetsResult$ = merge(
     toObservable(this.selectedPostalCode).pipe(map(zip => ({ zip }))),
-    toObservable(this.selectedCityName).pipe(map(city => ({ city })))
+    toObservable(this.selectedCityName).pipe(map(city => ({ city }))),
+    toObservable(this.streetResetTick).pipe(map(() => ({ reset: true as const })))
   )
     .pipe(
       debounceTime(300),
-      switchMap((criteria: { zip?: number, city?: string }) => {
-        if (criteria.zip) {
+      switchMap((criteria: { zip?: number, city?: string, reset?:true }) => {
+        if (criteria.reset) {
+          return of([]);
+        } else  if (criteria.zip) {
           return this.getStreetNamesByPostalCode(criteria.zip);
         } else if (criteria.city) {
           return this.getStreetNamesByCityName(criteria.city);
@@ -128,5 +137,6 @@ export class AddressService {
   private getStreetNamesByCityName(cityName: string): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/streetByCity/${cityName}`);
   }
+
 
 }

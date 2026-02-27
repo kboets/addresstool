@@ -1,5 +1,5 @@
 # Stage 1: Build the application
-FROM maven:3.9.9-eclipse-temurin-24 AS builder
+FROM maven:3.9-eclipse-temurin-25 AS builder
 WORKDIR /app
 
 # Copy the maven wrapper and pom first to leverage Docker cache
@@ -15,7 +15,7 @@ COPY src ./src
 RUN ./mvnw clean package -DskipTests
 
 # Stage 2: Run the application
-FROM eclipse-temurin:24-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 # Copy the built jar from the builder stage
 COPY --from=builder /app/target/addresstool.jar app.jar

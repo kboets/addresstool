@@ -6,7 +6,7 @@ import {catchError, map, Observable, of, switchMap} from "rxjs";
 import {Person} from "@shared/models/person";
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {Result} from "@core/entities/result";
-import {shareReplay} from "rxjs/operators";
+import {shareReplay, tap} from "rxjs/operators";
 
 @Injectable({
   providedIn: 'root',
@@ -26,6 +26,10 @@ export class SearchService {
     this.searchCriteria.set(criteria);
   }
 
+  public clearSearch() {
+    this.searchCriteria.set(undefined);
+  }
+
   private searchResult$ = toObservable(this.searchCriteria)
     .pipe(
       switchMap(criteria => {
@@ -33,6 +37,7 @@ export class SearchService {
           return of({data: [], error: undefined} as Result<Person[]>);
         }
         return this.searchPerson(criteria).pipe(
+          tap(persons => console.log(persons)),
           map(persons => ({data: persons} as Result<Person[]>)),
           catchError(error => of({
             data: [],

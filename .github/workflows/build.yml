@@ -3,13 +3,18 @@ on:
   pull_request:
     branches:
      - master
+    paths:
+      - addresstool-api/**
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./addresstool-api
     steps:
       - name: Checkout
-        run: actions/checkout@v6
+        uses: actions/checkout@v6
       - name: Setup Java
         uses: actions/setup-java@v5
         with:

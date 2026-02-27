@@ -1,55 +1,43 @@
 package be.boets.addresstool.address;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
+public record Address(String street, String number, String box, City city) {
 
-import java.io.Serializable;
 
-public class Address implements Serializable {
-    @Column(name = "street", nullable = false)
-    private String street;
+    public static final class AddressBuilder {
+        private String street;
+        private String number;
+        private String box;
+        private City city;
 
-    @Column(name = "number", nullable = false)
-    private int number;
+        private AddressBuilder() {
+        }
 
-    @Column(name = "box")
-    private String box;
+        public static AddressBuilder anAddress() {
+            return new AddressBuilder();
+        }
 
-    @Embedded
-    private City city;
+        public AddressBuilder withStreet(String street) {
+            this.street = street;
+            return this;
+        }
 
-    public Address() {
-    }
+        public AddressBuilder withNumber(String number) {
+            this.number = number;
+            return this;
+        }
 
-    public String getStreet() {
-        return street;
-    }
+        public AddressBuilder withBox(String box) {
+            this.box = box;
+            return this;
+        }
 
-    public void setStreet(String street) {
-        this.street = street;
-    }
+        public AddressBuilder withCity(City city) {
+            this.city = city;
+            return this;
+        }
 
-    public int getNumber() {
-        return number;
-    }
-
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public String getBox() {
-        return box;
-    }
-
-    public void setBox(String box) {
-        this.box = box;
-    }
-
-    public City getCity() {
-        return city;
-    }
-
-    public void setCity(City city) {
-        this.city = city;
+        public Address build() {
+            return new Address(street, number, box, city);
+        }
     }
 }

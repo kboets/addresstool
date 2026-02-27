@@ -2,7 +2,7 @@ export class SearchCriteria {
   firstName?: string;
   name?: string;
   street?: string;
-  number?: number;
+  number?: string;
   postalCode?: string;
   city?: string;
 }

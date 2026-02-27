@@ -36,15 +36,15 @@ class AddressServiceTest {
                 )
         );
         when(cityClientService.findByPostcode(any())).thenReturn(cityResponses);
-        List<CityRecord> cities = addressService.findByZipCode("3500");
+        List<City> cities = addressService.findByZipCode("3500");
         assertEquals(2, cities.size());
-        assertThat(cities.getFirst()).isEqualTo(new CityRecord("Hasselt", "3500", true));
+        assertThat(cities.getFirst()).isEqualTo(new City("Hasselt", "3500", true));
     }
 
     @Test
     void givenInvalidZipCode_findByZipCode_shouldReturnEmptyList() {
         when(cityClientService.findByPostcode(any())).thenReturn(List.of());
-        List<CityRecord> cities = addressService.findByZipCode("AB3500");
+        List<City> cities = addressService.findByZipCode("AB3500");
         assertEquals(0, cities.size());
     }
 
@@ -57,9 +57,9 @@ class AddressServiceTest {
                 )
         );
         when(cityClientService.findByCityName(any())).thenReturn(cityResponses);
-        List<CityRecord> cities = addressService.findByCityName("averbode");
+        List<City> cities = addressService.findByCityName("averbode");
         assertEquals(1, cities.size());
-        assertThat(cities.getFirst()).isEqualTo(new CityRecord( "Averbode", "3271", false));
+        assertThat(cities.getFirst()).isEqualTo(new City( "Averbode", "3271", false));
     }
 
 

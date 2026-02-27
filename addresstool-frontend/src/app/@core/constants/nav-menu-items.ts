@@ -1,5 +1,4 @@
-import { PERMISSIONS } from '../../auth/enums/permissions.enum';
-import { NavMenuItem } from '@core/interfaces';
+import {NavMenuItem} from '@core/interfaces';
 
 // THIS FILE CONTAINS THE NAVIGATION MENU ITEMS FOR THE SIDEBAR AND ALL OTHER NAVIGATION MENUS WHICH ARE USED IN THE APPLICATION AND ARE CONSTANT
 
@@ -9,23 +8,21 @@ import { NavMenuItem } from '@core/interfaces';
 export const webSidebarMenuItems: NavMenuItem[] = [
   {
     href: '/dashboard',
-    title: 'Dashboard',
+    title: 'Zoek',
     active: true,
     icon: 'fa-home',
   },
   {
     href: '/users',
-    title: 'Users',
+    title: 'Toevoegen',
     active: false,
     icon: 'fa-users',
-    permissions: [PERMISSIONS.ACCESS_USER],
   },
   {
     href: '/sales',
     title: 'Sales',
     active: false,
     icon: 'fa-money-bill-alt',
-    permissions: [PERMISSIONS.ACCESS_SALE],
   },
   {
     href: '/products',

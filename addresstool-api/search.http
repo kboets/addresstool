@@ -4,10 +4,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Kurt",
-  "firstName": null,
+  "firstName": "Kurt",
+  "name": null,
   "street": null,
-  "number": 0,
+  "number": null,
   "postalCode": null,
   "city": null
 }
@@ -20,7 +20,7 @@ Accept: application/json
 "name": null,
 "firstName": null,
 "street": null,
-"number": 0,
+"number": null,
 "postalCode": null,
 "city": "Averbode"
 }
