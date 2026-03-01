@@ -37,8 +37,8 @@
     <!-- gemeente + postcode -->
     <div class="row row-space mt-2">
       <div class="col-4">
-        <label for="cityEntity">Gemeente</label>
-        <input id="cityEntity"
+        <label for="city">Gemeente</label>
+        <input id="city"
                type="text"
                formControlName="city"
                class="form-control"
@@ -70,7 +70,7 @@
     <div class="row row-space mt-2">
       <div class="col-4">
         <label for="street">Straat</label>
-        <input id="cityEntity"
+        <input id="street"
                type="text"
                formControlName="street"
                class="form-control"
@@ -113,7 +113,11 @@
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{person.birthDate | date: 'dd/MM/yyyy'}}</td>
               <td>{{ person.address?.street }} {{ person.address?.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address?.city?.postalCode }} {{ person.address?.city?.name }}</td>
-              <td><button type="button" class="btn btn-outline-primary btn-sm" (click)="onEdit(person)">Wijzig</button></td>
+              <td>
+                <button type="button" class="btn btn-outline-primary btn-sm" (click)="onEdit(person)">Wijzig</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletePersonModal"
+                        (click)="selectedPerson = person">Verwijder</button>
+              </td>
             </tr>
 
           } @empty {
@@ -127,6 +131,26 @@
     </div>
   }
 
-
-
 </section>
+
+@if (selectedPerson) {
+  <div class="modal-dialog" id="deletePersonModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Verwijder {{selectedPerson?.firstName}} {{selectedPerson?.lastName}}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" (click)="onCancelModal()"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ben je zeker dat je deze persoon wil verwijderen?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="onCancelModal()">Annuleer</button>
+        <button type="button"  class="btn btn-danger" (click)="onDelete()"  [disabled]="!selectedPerson">
+          Verwijder
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+
