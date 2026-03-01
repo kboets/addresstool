@@ -7,6 +7,7 @@ import {SearchService} from "./search-service";
 import {SearchCriteria} from "@shared/models/searchCriteria";
 import {Person} from "@shared/models/person";
 import {Router} from "@angular/router";
+import {UserService} from "@pages/users/user-service";
 
 @Component({
   selector: 'app-dashboard',
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnInit {
 
   private addressService = inject(AddressService);
   private searchService = inject(SearchService);
+  private userService = inject(UserService)
   private readonly router = inject(Router);
 
   // cities name signals
@@ -36,6 +38,7 @@ export class DashboardComponent implements OnInit {
 
   searchForm: FormGroup;
   shouldShowPersons: boolean;
+  selectedPerson: Person | null = null;
 
   constructor(private fb: FormBuilder) {
     this.searchForm = this.fb.group({
@@ -83,6 +86,25 @@ export class DashboardComponent implements OnInit {
     this.router.navigate(['/users'], {
       queryParams: { personId: null },
     });
+  }
+
+  onCancelModal() {
+    this.selectedPerson = null;
+  }
+
+  onDelete() {
+    if (!this.selectedPerson) return;
+    const id = this.selectedPerson.id;
+    this.userService.deleteById(id).subscribe({
+      next: () => {
+        this.searchService.clearSearch();
+        this.shouldShowPersons = false;
+      },
+      error: (error) => {
+        console.error('Error deleting person', error);
+      },
+    });
+    this.selectedPerson = null;
   }
 
   ngOnInit(): void {
@@ -156,4 +178,6 @@ export class DashboardComponent implements OnInit {
       return hasValue ? null : { atLeastOne: true };
     };
   }
+
+  protected readonly decodeURI = decodeURI;
 }

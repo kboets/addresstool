@@ -17,7 +17,7 @@ services:
         - postgres
       restart: unless-stopped
 
-  addresstool:
+  addresstool-api:
     container_name: addresstool
     build:
       context: .
