@@ -1,21 +1,20 @@
-import {computed, inject, Injectable, signal} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {debounceTime, distinctUntilChanged, map, merge, Observable, of, switchMap} from "rxjs";
-import {toObservable, toSignal} from "@angular/core/rxjs-interop";
-import {catchError, shareReplay} from "rxjs/operators";
-import {HttpErrorService} from "@core/services/http-error.service";
-import {Result} from "@core/entities/result";
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { debounceTime, distinctUntilChanged, map, merge, Observable, of, switchMap } from 'rxjs';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { catchError, shareReplay } from 'rxjs/operators';
+import { HttpErrorService } from '@core/services/http-error.service';
+import { Result } from '@core/entities/result';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AddressService {
-
-  private baseUrl = "/addresstool/api";
+  private baseUrl = '/addresstool/api';
   private http = inject(HttpClient);
   private errorService = inject(HttpErrorService);
 
-  constructor() { }
+  constructor() {}
 
   // ** retrieve city names via postal code ** //
 
@@ -30,25 +29,26 @@ export class AddressService {
   }
 
   // retrieve all cities from zipcode
-  private cityNamesResult$ = toObservable(this.selectedPostalCode)
-    .pipe(
-      //tap(zipCode => console.log("before the call to the backend: " + zipCode)),
-      switchMap(zipCode => {
-        if (!zipCode) {
-          return of({data: [], error: undefined} as Result<string[]>);
-        }
-        return this.getCities(zipCode).pipe(
-            map(cities => ({data: cities} as Result<string[]>)),
-            catchError(error => of({
-              data: undefined,
-              error: this.errorService.formatError(error)
-            } as Result<string[]>)),
-          )
-      }),
-      shareReplay(1)
-    );
+  private cityNamesResult$ = toObservable(this.selectedPostalCode).pipe(
+    //tap(zipCode => console.log("before the call to the backend: " + zipCode)),
+    switchMap((zipCode) => {
+      if (!zipCode) {
+        return of({ data: [], error: undefined } as Result<string[]>);
+      }
+      return this.getCities(zipCode).pipe(
+        map((cities) => ({ data: cities }) as Result<string[]>),
+        catchError((error) =>
+          of({
+            data: undefined,
+            error: this.errorService.formatError(error),
+          } as Result<string[]>),
+        ),
+      );
+    }),
+    shareReplay(1),
+  );
 
-  private cityNamesResult = toSignal(this.cityNamesResult$, {initialValue: {data: [], error: undefined}});
+  private cityNamesResult = toSignal(this.cityNamesResult$, { initialValue: { data: [], error: undefined } });
   cityNames = computed(() => this.cityNamesResult()?.data);
   cityNamesError = computed(() => this.cityNamesResult()?.error);
 
@@ -68,66 +68,67 @@ export class AddressService {
   }
 
   //get postal code from city name
-  private postalCodeResult$ = toObservable(this.selectedCityName)
-    .pipe(
-      debounceTime(300),
-      distinctUntilChanged(),
-      switchMap(cityName => {
-        if (!cityName) {
-          return of({data: undefined, error: undefined} as Result<string>);
-        }
-        return this.getPostalCode(cityName).pipe(
-            map(postalCode => ({data: postalCode} as Result<string>)),
-            catchError(error => of({
-              data: undefined,
-              error: this.errorService.formatError(error)
-            } as Result<string>)),
-        )
-      }),
-      shareReplay(1)
-    );
-  private postalCodeResult = toSignal(this.postalCodeResult$, {initialValue: {data: '', error: undefined}})
+  private postalCodeResult$ = toObservable(this.selectedCityName).pipe(
+    debounceTime(300),
+    distinctUntilChanged(),
+    switchMap((cityName) => {
+      if (!cityName) {
+        return of({ data: undefined, error: undefined } as Result<string>);
+      }
+      return this.getPostalCode(cityName).pipe(
+        map((postalCode) => ({ data: postalCode }) as Result<string>),
+        catchError((error) =>
+          of({
+            data: undefined,
+            error: this.errorService.formatError(error),
+          } as Result<string>),
+        ),
+      );
+    }),
+    shareReplay(1),
+  );
+  private postalCodeResult = toSignal(this.postalCodeResult$, { initialValue: { data: '', error: undefined } });
   postalCode = computed(() => this.postalCodeResult().data);
   postalCodeError = computed(() => this.postalCodeResult()?.error);
 
-  private getPostalCode(cityName: string) : Observable<string> {
+  private getPostalCode(cityName: string): Observable<string> {
     return this.http.get<string>(`${this.baseUrl}/postalCodeByCityName/${cityName}`);
   }
-
 
   // ****** retrieve street name with postal code or city name ****** //
   private streetResetTick = signal(0);
 
   public resetStreetNames() {
-    this.streetResetTick.update(v => v + 1); // force an emission so streets become []
+    this.streetResetTick.update((v) => v + 1); // force an emission so streets become []
   }
 
   private streetsResult$ = merge(
-    toObservable(this.selectedPostalCode).pipe(map(zip => ({ zip }))),
-    toObservable(this.selectedCityName).pipe(map(city => ({ city }))),
-    toObservable(this.streetResetTick).pipe(map(() => ({ reset: true as const })))
-  )
-    .pipe(
-      debounceTime(300),
-      switchMap((criteria: { zip?: number, city?: string, reset?:true }) => {
-        if (criteria.reset) {
-          return of([]);
-        } else  if (criteria.zip) {
-          return this.getStreetNamesByPostalCode(criteria.zip);
-        } else if (criteria.city) {
-          return this.getStreetNamesByCityName(criteria.city);
-        }
+    toObservable(this.selectedPostalCode).pipe(map((zip) => ({ zip }))),
+    toObservable(this.selectedCityName).pipe(map((city) => ({ city }))),
+    toObservable(this.streetResetTick).pipe(map(() => ({ reset: true as const }))),
+  ).pipe(
+    debounceTime(300),
+    switchMap((criteria: { zip?: number; city?: string; reset?: true }) => {
+      if (criteria.reset) {
         return of([]);
-      }),
-      map(streets => ({data: streets} as Result<string[]>)),
-      catchError(error => of({
+      } else if (criteria.zip) {
+        return this.getStreetNamesByPostalCode(criteria.zip);
+      } else if (criteria.city) {
+        return this.getStreetNamesByCityName(criteria.city);
+      }
+      return of([]);
+    }),
+    map((streets) => ({ data: streets }) as Result<string[]>),
+    catchError((error) =>
+      of({
         data: undefined,
-        error: this.errorService.formatError(error)
-      } as Result<string[]>)),
-      shareReplay(1)
-    );
+        error: this.errorService.formatError(error),
+      } as Result<string[]>),
+    ),
+    shareReplay(1),
+  );
 
-  private streetsResult = toSignal(this.streetsResult$, {initialValue: {data: [], error: undefined}});
+  private streetsResult = toSignal(this.streetsResult$, { initialValue: { data: [], error: undefined } });
   streets = computed(() => this.streetsResult()?.data);
   streetsError = computed(() => this.streetsResult()?.error);
 
@@ -137,6 +138,4 @@ export class AddressService {
   private getStreetNamesByCityName(cityName: string): Observable<string[]> {
     return this.http.get<string[]>(`${this.baseUrl}/streetByCity/${cityName}`);
   }
-
-
 }

@@ -23,7 +23,7 @@ spring:
     default-schema: addresstool
   docker:
     compose:
-      file: docker-compose.yaml
+      file: ../docker-compose.yaml
 
 
 server:

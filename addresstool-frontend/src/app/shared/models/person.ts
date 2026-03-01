@@ -1,4 +1,4 @@
-import {Address} from "@shared/models/address";
+import { Address } from '@shared/models/address';
 
 export interface Person {
   id: number;

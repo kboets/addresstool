@@ -4,5 +4,5 @@ module.exports = [
     context: ['/addresstool/api/**'],
     target: defaultTarget,
     changeOrigin: true,
-  }
+  },
 ];
