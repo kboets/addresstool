@@ -1,0 +1,64 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - addresstool-api/**
+      - addresstool-frontend/**
+      - .github/workflows/deploy.yml
+  pull_request:
+    branches:
+      - master
+    paths:
+      - addresstool-api/**
+      - addresstool-frontend/**
+      - .github/workflows/deploy.yml
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: addresstool-api/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Generate Build number
+        run: |
+          BUILD_NUMBER=$(date +%Y%m%d%H%M%S)
+          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
+          echo "Generated build number: $BUILD_NUMBER"
+
+      - name: Build with Maven
+        run: mvn -B -ntp clean verify
+
+      - name: Build Docker image
+        run: docker build -t addresstool-api:${BUILD_NUMBER} .
+
+#      - name: Push docker image
+#        run: docker push addresstool-api:${BUILD_NUMBER}
+
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: addresstool-frontend/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Build frontend Docker image
+        run: docker build -t addresstool-frontend:${BUILD_NUMBER} ./addresstool-frontend
+
+      - name: Push frontend Docker image
+        run: docker push addresstool-frontend:${BUILD_NUMBER}
+
