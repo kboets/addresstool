@@ -132,10 +132,11 @@ export class ListComponent implements OnInit {
         });
       } else {
         this.personService.save(personData).subscribe({
-          next: () => {
+          next: (savedPerson:Person) => {
             this._toast.success('Persoon succesvol toegevoegd.');
             this.resetForm();
-            this.loadPeople();
+            this.currentPersonId = savedPerson.id;
+            this.loadPeople(savedPerson);
           },
           error: (error) => {
             this._toast.error('Fout opgetreden tijdens toevoegen. Fout boodschap: ' + error.error.message + '.');

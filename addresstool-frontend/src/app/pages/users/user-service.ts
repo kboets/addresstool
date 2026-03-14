@@ -20,8 +20,8 @@ export class UserService {
     return this.http.get<Person>(`${this.baseUrl}/${id}`);
   }
 
-  save(person: Person): Observable<void> {
-    return this.http.post<void>(this.baseUrl, person);
+  save(person: Person): Observable<Person> {
+    return this.http.post<Person>(this.baseUrl, person);
   }
 
   update(person: Person): Observable<void> {

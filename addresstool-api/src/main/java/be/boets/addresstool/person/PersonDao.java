@@ -9,7 +9,7 @@ public interface PersonDao {
 
     List<PersonEntity> getAll();
     Optional<PersonEntity> getById(int id);
-    void save(PersonEntity personEntity);
+    PersonEntity save(PersonEntity personEntity);
     void delete(PersonEntity personEntity);
     void deleteById(int id);
     void deleteAll();

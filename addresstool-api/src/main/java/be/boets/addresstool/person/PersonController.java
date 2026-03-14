@@ -16,8 +16,8 @@ public class PersonController {
     }
 
     @PostMapping
-    public void save(@RequestBody Person person) {
-        personService.save(person);
+    public Person save(@RequestBody Person person) {
+        return personService.save(person);
     }
 
     @PutMapping
