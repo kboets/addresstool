@@ -31,12 +31,6 @@ jobs:
           distribution: temurin
           java-version: 25
 
-      - name: Generate Build number
-        run: |
-          BUILD_NUMBER=$(date +%Y%m%d%H%M)
-          echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
-          echo "Generated build number: $BUILD_NUMBER"
-
       - name: Build with Maven
         run: mvn -B -ntp clean verify
 
@@ -64,7 +58,7 @@ jobs:
         run: |
           set -euo pipefail  
           REPO="kubo1601/addresstool-api"
-          KEEP_COUNT=3
+          KEEP_COUNT=2
     
           TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
@@ -126,7 +120,7 @@ jobs:
           set -euo pipefail
 
           REPO="kubo1601/addresstool-frontend"
-          KEEP_COUNT=5
+          KEEP_COUNT=2
 
           TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
