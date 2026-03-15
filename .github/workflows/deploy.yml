@@ -40,11 +40,21 @@ jobs:
       - name: Build with Maven
         run: mvn -B -ntp clean verify
 
-      - name: Build Docker image
-        run: docker build -t kubo1601/addresstool-api:${{ github.run_number }} .
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - name: Push docker image
-#        run: docker push addresstool-api:${BUILD_NUMBER}
+      - name: Build Docker image
+        run: |
+            docker build -t kubo1601/addresstool-api:${{ github.run_number }} \
+                         -t kubo1601/addresstool-api:latest .
+
+      - name: Push docker image
+        run: |
+          docker push kubo1601/addresstool-api:${{ github.run_number }}
+          docker push kubo1601/addresstool-api:latest
 
 
   frontend:
@@ -56,9 +66,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Build frontend Docker image
-        run: docker build -t kubo1601/addresstool-frontend:${{ github.run_number }} .
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-#      - name: Push frontend Docker image
-#        run: docker push addresstool-frontend:${BUILD_NUMBER}
+      - name: Build frontend Docker image
+        run: | 
+          docker build -t kubo1601/addresstool-frontend:${{ github.run_number }} \
+                       -t kubo1601/addresstool-frontend:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push kubo1601/addresstool-frontend:${{ github.run_number }}
+          docker push kubo1601/addresstool-frontend:latest
 
