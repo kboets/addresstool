@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: '22'
           cache: yarn
-          cache-dependency-path: ./addresstool-frontend/yarn-lock
+          cache-dependency-path: ./addresstool-frontend/yarn.lock
 
       - name: Enable Corepack
         run: corepack enable
