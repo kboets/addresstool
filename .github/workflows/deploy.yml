@@ -33,7 +33,7 @@ jobs:
 
       - name: Generate Build number
         run: |
-          BUILD_NUMBER=$(date +%Y%m%d%H%M%S)
+          BUILD_NUMBER=$(date +%Y%m%d%H%M)
           echo "BUILD_NUMBER=$BUILD_NUMBER" >> $GITHUB_ENV
           echo "Generated build number: $BUILD_NUMBER"
 
@@ -41,7 +41,7 @@ jobs:
         run: mvn -B -ntp clean verify
 
       - name: Build Docker image
-        run: docker build -t kubo1601/addresstool-api:${BUILD_NUMBER} .
+        run: docker build -t kubo1601/addresstool-api:${{ github.run_number }} .
 
 #      - name: Push docker image
 #        run: docker push addresstool-api:${BUILD_NUMBER}
@@ -57,7 +57,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Build frontend Docker image
-        run: docker build -t kubo1601/addresstool-frontend:${BUILD_NUMBER} .
+        run: docker build -t kubo1601/addresstool-frontend:${{ github.run_number }} .
 
 #      - name: Push frontend Docker image
 #        run: docker push addresstool-frontend:${BUILD_NUMBER}
