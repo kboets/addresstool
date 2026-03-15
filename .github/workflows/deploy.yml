@@ -60,8 +60,8 @@ jobs:
           docker push kubo1601/addresstool-api:latest
 
       - name: Cleanup old backend Docker Hub tags
-      - shell: bash
-      - run: |
+        shell: bash
+        run: |
           set -euo pipefail  
           REPO="kubo1601/addresstool-api"
           KEEP_COUNT=3
