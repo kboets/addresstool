@@ -62,39 +62,38 @@ jobs:
       - name: Cleanup old backend Docker Hub tags
       - shell: bash
       - run: |
-          - set -euo pipefail
-  
-          - REPO="kubo1601/addresstool-api"
-          - KEEP_COUNT=3
+          set -euo pipefail  
+          REPO="kubo1601/addresstool-api"
+          KEEP_COUNT=3
     
-          - TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
-          -H "Content-Type: application/json" \
-          -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}" \
-          - | jq -r .token)
+          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}" \
+            | jq -r .token)
     
-          - TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REPO}/tags?page_size=100" \
-          -H "Authorization: Bearer ${TOKEN}" \
-            - | jq -r '.results[].name')
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REPO}/tags?page_size=100" \
+            -H "Authorization: Bearer ${TOKEN}" \
+             | jq -r '.results[].name')
     
-            - TO_DELETE=$(echo "${TAGS}" \
-            - | grep -E '^[0-9]+$' \
-            - | sort -nr \
-            - | tail -n +$((KEEP_COUNT + 1)))
+          TO_DELETE=$(echo "${TAGS}" \
+            | grep -E '^[0-9]+$' \
+            | sort -nr \
+            | tail -n +$((KEEP_COUNT + 1)))
     
-            - if [ -z "${TO_DELETE}" ]; then
-            - echo "No old backend tags to delete."
-            - exit 0
-            - fi
+           if [ -z "${TO_DELETE}" ]; then
+            echo "No old backend tags to delete."
+            exit 0
+           fi
     
-            - echo "Deleting backend tags:"
-            - echo "${TO_DELETE}"
+           echo "Deleting backend tags:"
+           echo "${TO_DELETE}"
     
-            - for TAG in ${TO_DELETE}; do
-            - curl -s -o /dev/null -w "%{http_code}" -X DELETE \
-            - "https://hub.docker.com/v2/repositories/${REPO}/tags/${TAG}/" \
-          -H "Authorization: Bearer ${TOKEN}"
-            - echo " Deleted ${REPO}:${TAG}"
-            - done
+           for TAG in ${TO_DELETE}; do
+            curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              "https://hub.docker.com/v2/repositories/${REPO}/tags/${TAG}/" \
+              -H "Authorization: Bearer ${TOKEN}"
+            echo " Deleted ${REPO}:${TAG}"
+           done
 
   frontend:
     runs-on: ubuntu-latest
