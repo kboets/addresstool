@@ -38,11 +38,14 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: npm
-          cache-dependency-path: ./addresstool-frontend/package-lock.json
+          cache: yarn
+          cache-dependency-path: ./addresstool-frontend/yarn-lock
+
+      - name: Enable Corepack
+        run: corepack enable
 
       - name: Install dependencies
-        run: npm ci
+        run: yarn install --frozen-lockfile
 
       - name: Build frontend
-        run: npm run build
+        run: yarn build
