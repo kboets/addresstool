@@ -7,13 +7,6 @@ on:
       - addresstool-api/**
       - addresstool-frontend/**
       - .github/workflows/deploy.yml
-  pull_request:
-    branches:
-      - master
-    paths:
-      - addresstool-api/**
-      - addresstool-frontend/**
-      - .github/workflows/deploy.yml
 
 jobs:
   backend:
