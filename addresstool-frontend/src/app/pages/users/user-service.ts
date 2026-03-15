@@ -1,17 +1,16 @@
-import {inject, Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {Person} from "@shared/models/person";
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Person } from '@shared/models/person';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-
-  private baseUrl = "/addresstool/api/person";
+  private baseUrl = '/addresstool/api/person';
   private http = inject(HttpClient);
 
-  constructor() { }
+  constructor() {}
 
   getAllPersons(): Observable<Person[]> {
     return this.http.get<Person[]>(`${this.baseUrl}/all`);
@@ -21,8 +20,8 @@ export class UserService {
     return this.http.get<Person>(`${this.baseUrl}/${id}`);
   }
 
-  save(person: Person): Observable<void> {
-    return this.http.post<void>(this.baseUrl, person);
+  save(person: Person): Observable<Person> {
+    return this.http.post<Person>(this.baseUrl, person);
   }
 
   update(person: Person): Observable<void> {

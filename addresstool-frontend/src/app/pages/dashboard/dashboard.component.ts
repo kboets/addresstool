@@ -1,13 +1,13 @@
-import {Component, effect, inject, OnInit} from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { CommonModule } from '@angular/common';
-import {ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors} from '@angular/forms';
-import {AddressService} from "@shared/services/address-service";
-import {SearchService} from "./search-service";
-import {SearchCriteria} from "@shared/models/searchCriteria";
-import {Person} from "@shared/models/person";
-import {Router} from "@angular/router";
-import {UserService} from "@pages/users/user-service";
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { AddressService } from '@shared/services/address-service';
+import { SearchService } from './search-service';
+import { SearchCriteria } from '@shared/models/searchCriteria';
+import { Person } from '@shared/models/person';
+import { Router } from '@angular/router';
+import { UserService } from '@pages/users/user-service';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,10 +16,9 @@ import {UserService} from "@pages/users/user-service";
   styleUrls: ['./dashboard.component.scss', '../users/list/list.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-
   private addressService = inject(AddressService);
   private searchService = inject(SearchService);
-  private userService = inject(UserService)
+  private userService = inject(UserService);
   private readonly router = inject(Router);
 
   // cities name signals
@@ -41,35 +40,26 @@ export class DashboardComponent implements OnInit {
   selectedPerson: Person | null = null;
 
   constructor(private fb: FormBuilder) {
-    this.searchForm = this.fb.group({
-      firstName: [''],
-      lastName: [''],
-      street: [''],
-      number: [''],
-      postalCode: ['', [
-        Validators.pattern('^[0-9]{4}$')]
-        ],
-      city: [''],
-      country: [''],
-    },
+    this.searchForm = this.fb.group(
+      {
+        firstName: [''],
+        lastName: [''],
+        street: [''],
+        number: [''],
+        postalCode: ['', [Validators.pattern('^[0-9]{4}$')]],
+        city: [''],
+        country: [''],
+      },
       {
         // Form is valid if at least one criterion is filled in
-        validators: [this.atLeastOneFilledValidator([
-          'firstName',
-          'lastName',
-          'street',
-          'number',
-          'postalCode',
-          'city',
-          'country',
-        ])]
-      }
-      );
+        validators: [this.atLeastOneFilledValidator(['firstName', 'lastName', 'street', 'number', 'postalCode', 'city', 'country'])],
+      },
+    );
 
     effect(() => {
       const code = this.postalCode();
       if (code) {
-        this.searchForm.get('postalCode')?.setValue(code, {emitEvent: false});
+        this.searchForm.get('postalCode')?.setValue(code, { emitEvent: false });
       }
     });
 
@@ -137,9 +127,9 @@ export class DashboardComponent implements OnInit {
     });
     this.searchForm.get('postalCode')?.valueChanges.subscribe(() => {
       if (this.searchForm.get('city')?.value !== undefined && this.searchForm.get('city')?.value !== '') {
-        this.searchForm.patchValue({city: ''});
+        this.searchForm.patchValue({ city: '' });
       }
-    })
+    });
   }
 
   onCitySelected(event: Event): void {
@@ -159,7 +149,7 @@ export class DashboardComponent implements OnInit {
   private getCityNames() {
     const postalCode = this.searchForm.get('postalCode')?.value;
     console.log('component -> getCityNames: ', postalCode);
-    this.addressService.postalCodeSelected(+postalCode)
+    this.addressService.postalCodeSelected(+postalCode);
   }
 
   protected readonly event = event;

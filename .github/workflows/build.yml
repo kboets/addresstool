@@ -5,9 +5,11 @@ on:
      - master
     paths:
       - addresstool-api/**
+      - addresstool-frontend/**
+      - .github/workflows/build.yml
 
 jobs:
-  build:
+  backend:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,4 +24,28 @@ jobs:
           java-version: '25'
       - name: maven clean verify
         run: mvn -B -ntp clean verify
-  
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./addresstool-frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: yarn
+          cache-dependency-path: ./addresstool-frontend/yarn.lock
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build frontend
+        run: yarn build

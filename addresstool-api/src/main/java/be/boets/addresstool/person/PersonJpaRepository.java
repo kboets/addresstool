@@ -28,8 +28,8 @@ public class PersonJpaRepository implements PersonDao {
     }
 
     @Override
-    public void save(PersonEntity personEntity) {
-        personRepository.save(personEntity);
+    public PersonEntity save(PersonEntity personEntity) {
+        return personRepository.save(personEntity);
     }
 
     @Override

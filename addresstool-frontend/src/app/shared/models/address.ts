@@ -1,4 +1,4 @@
-import {City} from "@shared/models/city";
+import { City } from '@shared/models/city';
 
 export interface Address {
   street: string;

@@ -20,14 +20,15 @@ public class PersonService {
         this.personDao = personDao;
     }
 
-    public void save(Person person) {
+    public Person save(Person person) {
         Person upperCasePerson = upperFirstCharacter(person);
         PersonEntity personEntity = personMapper.toPerson(upperCasePerson);
         if (personEntity.getId() == null) {
-            personDao.save(personEntity);
+            personEntity = personDao.save(personEntity);
         } else{
             personDao.update(personEntity);
         }
+        return personMapper.toPersonRecord(personEntity);
     }
 
     public void delete(Person person) {

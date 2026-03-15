@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HotToastService } from '@ngxpert/hot-toast';
 import { AddressService } from '@shared/services/address-service';
 import { UserService } from '../user-service';
-import {Person} from "@shared/models/person";
-import {ActivatedRoute, Router} from "@angular/router";
+import { Person } from '@shared/models/person';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -82,10 +82,9 @@ export class ListComponent implements OnInit {
         },
       });
     });
-
   }
 
-  loadPeople(person? : Person) {
+  loadPeople(person?: Person) {
     this.isLoading = true;
     if (person) {
       this.personService.getById(this.currentPersonId).subscribe({
@@ -95,11 +94,11 @@ export class ListComponent implements OnInit {
           this.shouldShowPeople = true;
         },
         error: (error) => {
-          this._toast.error('Kan persoon niet laden. Fout: ',error);
+          this._toast.error('Kan persoon niet laden. Fout: ', error);
           this.isLoading = false;
           this.shouldShowPeople = false;
         },
-      })
+      });
     } else {
       this.personService.getAllPersons().subscribe({
         next: (people) => {
@@ -114,7 +113,6 @@ export class ListComponent implements OnInit {
         },
       });
     }
-
   }
 
   onSubmit() {
@@ -134,10 +132,11 @@ export class ListComponent implements OnInit {
         });
       } else {
         this.personService.save(personData).subscribe({
-          next: () => {
+          next: (savedPerson:Person) => {
             this._toast.success('Persoon succesvol toegevoegd.');
             this.resetForm();
-            this.loadPeople();
+            this.currentPersonId = savedPerson.id;
+            this.loadPeople(savedPerson);
           },
           error: (error) => {
             this._toast.error('Fout opgetreden tijdens toevoegen. Fout boodschap: ' + error.error.message + '.');
@@ -225,10 +224,7 @@ export class ListComponent implements OnInit {
       }
     });
     this.personForm.get('address.city.postalCode')?.valueChanges.subscribe(() => {
-      if (
-        this.personForm.get('address.city.name')?.value !== undefined &&
-        this.personForm.get('address.city.name')?.value !== ''
-      ) {
+      if (this.personForm.get('address.city.name')?.value !== undefined && this.personForm.get('address.city.name')?.value !== '') {
         this.personForm.patchValue({ city: { name: '' } });
       }
     });

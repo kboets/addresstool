@@ -61,6 +61,7 @@ export const appConfig: ApplicationConfig = {
       autoClose: true,
       position: 'top-right',
       theme: 'snackbar',
+      duration: 3000,
     }),
 
     // provideHttpClient is required for Angular's HttpClient with additional configuration, which includes interceptors from DI (dependency injection) , means to use class based interceptors

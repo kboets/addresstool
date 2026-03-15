@@ -1,5 +1,5 @@
 <section class="main-container">
-<!--  <h2>{{ isEditing ? 'Voeg toe' : 'Update' }}</h2>-->
+  <!--  <h2>{{ isEditing ? 'Voeg toe' : 'Update' }}</h2>-->
 
   <form [formGroup]="personForm" class="addressEntity-form" (ngSubmit)="onSubmit()">
     <div>
@@ -29,18 +29,11 @@
           <div class="col-4">
             <div class="form-group">
               <label for="city">Gemeente</label>
-              <input
-                id="city"
-                type="text"
-                formControlName="name"
-                (change)="onCitySelected($event)"
-                autocomplete="off"
-                [attr.list]="'cityList-' + cityNames()?.length"
-              />
+              <input id="city" type="text" formControlName="name" (change)="onCitySelected($event)" autocomplete="off" [attr.list]="'cityList-' + cityNames()?.length" />
 
               <datalist [id]="'cityList-' + cityNames()?.length">
                 @for (cityName of cityNames(); track cityName) {
-                <option [value]="cityName"></option>
+                  <option [value]="cityName"></option>
                 }
               </datalist>
             </div>
@@ -56,16 +49,10 @@
           <div class="col-4">
             <div class="form-group">
               <label for="street">Straat</label>
-              <input
-                id="street"
-                type="text"
-                formControlName="street"
-                autocomplete="off"
-                [attr.list]="'streetList-' + streetNames()?.length"
-              />
+              <input id="street" type="text" formControlName="street" autocomplete="off" [attr.list]="'streetList-' + streetNames()?.length" />
               <datalist [id]="'streetList-' + streetNames()?.length">
                 @for (streetName of streetNames(); track streetName) {
-                <option [value]="streetName"></option>
+                  <option [value]="streetName"></option>
                 }
               </datalist>
             </div>
@@ -87,7 +74,7 @@
     </div>
 
     <div class="btn-group mt-3" role="group">
-      <button type="submit" class="btn btn-primary"  [disabled]="personForm.invalid">{{ isEditing ? 'Update' : 'Voeg toe' }}</button>
+      <button type="submit" class="btn btn-primary" [disabled]="personForm.invalid">{{ isEditing ? 'Update' : 'Voeg toe' }}</button>
       <button type="button" class="btn btn-outline-secondary ms-1" (click)="resetForm()">Reset</button>
     </div>
   </form>
@@ -99,21 +86,20 @@
     <div class="user-table-container">
       <table class="user-table">
         <thead>
-        <tr>
-          <th>Naam</th>
-          <th>Geboortedatum</th>
-          <th>Adres</th>
-          <th>Actions</th>
-        </tr>
+          <tr>
+            <th>Naam</th>
+            <th>Geboortedatum</th>
+            <th>Adres</th>
+            <th>Actions</th>
+          </tr>
         </thead>
         <tbody>
           @for (person of people; track person.id) {
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
-              <td>{{ person.birthDate | date: 'dd/MM/yyyy'}}</td>
+              <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
               <td>
-                {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }},
-                {{ person.address.city.postalCode }} {{ person.address.city.name }}
+                {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address.city.postalCode }} {{ person.address.city.name }}
               </td>
               <td>
                 <button type="button" class="btn btn-outline-primary btn-sm" (click)="editPerson(person)">Edit</button>
@@ -128,5 +114,4 @@
       </table>
     </div>
   }
-
 </section>

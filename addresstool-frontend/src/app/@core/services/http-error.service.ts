@@ -1,18 +1,17 @@
-import {Injectable} from "@angular/core";
-import {HttpErrorResponse} from "@angular/common/http";
+import { Injectable } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpErrorService {
-
   formatError(err: HttpErrorResponse): string {
     console.error('format error ', err);
     return this.httpErrorFormatter(err);
   }
 
   private httpErrorFormatter(err: HttpErrorResponse): string {
-    let errorMessage:string;
+    let errorMessage: string;
     if (err.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       errorMessage = `An error occurred: ${err.error.message}`;
