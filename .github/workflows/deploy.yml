@@ -41,7 +41,7 @@ jobs:
         run: mvn -B -ntp clean verify
 
       - name: Build Docker image
-        run: docker build -t addresstool-api:${BUILD_NUMBER} .
+        run: docker build -t kubo1601/addresstool-api:${BUILD_NUMBER} .
 
 #      - name: Push docker image
 #        run: docker push addresstool-api:${BUILD_NUMBER}
@@ -57,8 +57,8 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Build frontend Docker image
-        run: docker build -t addresstool-frontend:${BUILD_NUMBER} ./addresstool-frontend
+        run: docker build -t kubo1601/addresstool-frontend:${BUILD_NUMBER} .
 
-      - name: Push frontend Docker image
-        run: docker push addresstool-frontend:${BUILD_NUMBER}
+#      - name: Push frontend Docker image
+#        run: docker push addresstool-frontend:${BUILD_NUMBER}
 
