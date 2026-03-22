@@ -22,7 +22,7 @@ export const webSidebarMenuItems: NavMenuItem[] = [
     href: '/users/list',
     title: 'Overzicht',
     active: false,
-    icon: 'fa-money-bill-alt',
+    icon: 'fa-list',
   },
   {
     href: '/products',
