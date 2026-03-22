@@ -4,6 +4,9 @@ import be.boets.addresstool.address.Address;
 import be.boets.addresstool.address.City;
 import be.boets.addresstool.search.SearchCriteria;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +49,12 @@ public class PersonService {
 
     public List<Person> getAllPersons() {
         return personMapper.toPersonsRecord(personDao.getAll());
+    }
+
+    public Page<Person> getAllPagedPersons(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("lastName").ascending());
+        Page<PersonEntity>  allPagedPersons = personDao.getAll(pageRequest);
+        return allPagedPersons.map(personMapper::toPersonRecord);
     }
 
     public List<Person> search(SearchCriteria searchCriteria) {

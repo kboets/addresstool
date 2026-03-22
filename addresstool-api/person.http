@@ -23,8 +23,20 @@ Accept: application/json
 ### GET /getAllPersons
 GET http://localhost:8080/addresstool/api/person/all
 
+### GET /getAllPaged
+GET http://localhost:8080/addresstool/api/person/allPaged
+
+### GET /getAllPaged
+GET http://localhost:8080/addresstool/api/person/allPaged?pageNo=1&pageSize=5
+
+### GET /getAllPaged
+GET http://localhost:8080/addresstool/api/person/allPaged?pageNo=2&pageSize=5
+
+
 ### GET /getbyId
 GET http://localhost:8080/addresstool/api/person/8
+
+
 
 ### PUT /update personEntity
 PUT http://localhost:8080/addresstool/api/person

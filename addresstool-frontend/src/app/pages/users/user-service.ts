@@ -16,6 +16,15 @@ export class UserService {
     return this.http.get<Person[]>(`${this.baseUrl}/all`);
   }
 
+  getPagedPersons(page: number, size: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/allPaged`, {
+      params: {
+        pageNo: page.toString(),
+        pageSize: size.toString(),
+      },
+    });
+  }
+
   getById(id: number): Observable<Person> {
     return this.http.get<Person>(`${this.baseUrl}/${id}`);
   }

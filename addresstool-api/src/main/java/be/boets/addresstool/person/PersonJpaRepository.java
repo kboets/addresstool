@@ -2,6 +2,8 @@ package be.boets.addresstool.person;
 
 import be.boets.addresstool.search.SearchCriteria;
 import be.boets.addresstool.search.SearchSpecs;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +22,11 @@ public class PersonJpaRepository implements PersonDao {
     @Override
     public List<PersonEntity> getAll() {
         return personRepository.findAll();
+    }
+
+    @Override
+    public Page<PersonEntity> getAll(PageRequest pageRequest) {
+        return personRepository.findAll(pageRequest);
     }
 
     @Override
