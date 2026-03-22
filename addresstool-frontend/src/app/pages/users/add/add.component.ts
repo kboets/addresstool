@@ -8,11 +8,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss', '../../dashboard/dashboard.component.scss'],
+  templateUrl: './add.component.html',
+  styleUrls: ['./add.component.scss', '../../dashboard/dashboard.component.scss'],
   standalone: false,
 })
-export class ListComponent implements OnInit {
+export class AddComponent implements OnInit {
   private addressService = inject(AddressService);
   private personService = inject(UserService);
   private readonly route = inject(ActivatedRoute);

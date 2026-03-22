@@ -13,14 +13,14 @@ export const webSidebarMenuItems: NavMenuItem[] = [
     icon: 'fa-home',
   },
   {
-    href: '/users',
+    href: '/users/add',
     title: 'Toevoegen',
     active: false,
     icon: 'fa-users',
   },
   {
-    href: '/sales',
-    title: 'Sales',
+    href: '/users/list',
+    title: 'Overzicht',
     active: false,
     icon: 'fa-money-bill-alt',
   },

@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ListComponent } from '@pages/users/list/list.component';
+import { AddComponent } from '@pages/users/add/add.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'list',
+    redirectTo: 'add',
     pathMatch: 'full',
   },
   {
-    path: 'list',
-    component: ListComponent,
+    path: 'add',
+    component: AddComponent,
   },
 ];
 

@@ -13,7 +13,7 @@ import { UserService } from '@pages/users/user-service';
   selector: 'app-dashboard',
   imports: [TranslateModule, CommonModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss', '../users/list/list.component.scss'],
+  styleUrls: ['./dashboard.component.scss', '../users/add/add.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   private addressService = inject(AddressService);
@@ -67,13 +67,13 @@ export class DashboardComponent implements OnInit {
   }
 
   onEdit(person: Person) {
-    this.router.navigate(['/users'], {
+    this.router.navigate(['/users/add'], {
       queryParams: { personId: person.id },
     });
   }
 
   onAdd() {
-    this.router.navigate(['/users'], {
+    this.router.navigate(['/users/add'], {
       queryParams: { personId: null },
     });
   }

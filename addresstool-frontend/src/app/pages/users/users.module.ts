@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { UsersRoutingModule } from './users-routing.module';
-import { ListComponent } from './list/list.component';
+import { AddComponent } from './add/add.component';
 
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [AddComponent],
   imports: [CommonModule, UsersRoutingModule, ReactiveFormsModule],
 })
 export class UsersModule {}
