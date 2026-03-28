@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { environment } from '@env/environment';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -7,6 +7,7 @@ import { NavMode, ShellService } from '@app/shell/services/shell.service';
 import { webSidebarMenuItems } from '@core/constants';
 import { CredentialsService } from '@auth';
 import { NavMenuItem } from '@core/interfaces';
+import {AdminService} from "@shared/services/admin-service";
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -16,11 +17,15 @@ import { NavMenuItem } from '@core/interfaces';
   standalone: false,
 })
 export class SidebarComponent implements OnInit {
-  version: string = environment.version;
   year: number = new Date().getFullYear();
   sidebarItems: NavMenuItem[] = [];
   sidebarExtendedItem = -1;
   navExpanded = true;
+
+  private adminService = inject(AdminService);
+
+  version = this.adminService.version;
+
 
   constructor(
     private readonly _router: Router,

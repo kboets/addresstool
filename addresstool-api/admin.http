@@ -1,0 +1,3 @@
+### GET environment
+GET http://localhost:8080/addresstool/api/admin/currentVersion
+### GET cities by postalCode via DOCKER
