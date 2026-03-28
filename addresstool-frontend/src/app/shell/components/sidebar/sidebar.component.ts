@@ -1,12 +1,11 @@
 import {Component, inject, OnInit} from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { environment } from '@env/environment';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { filter } from 'rxjs/operators';
-import { NavMode, ShellService } from '@app/shell/services/shell.service';
-import { webSidebarMenuItems } from '@core/constants';
-import { CredentialsService } from '@auth';
-import { NavMenuItem } from '@core/interfaces';
+import {NavigationEnd, Router} from '@angular/router';
+import {UntilDestroy, untilDestroyed} from '@ngneat/until-destroy';
+import {filter} from 'rxjs/operators';
+import {NavMode, ShellService} from '@app/shell/services/shell.service';
+import {webSidebarMenuItems} from '@core/constants';
+import {CredentialsService} from '@auth';
+import {NavMenuItem} from '@core/interfaces';
 import {AdminService} from "@shared/services/admin-service";
 
 @UntilDestroy({ checkProperties: true })
