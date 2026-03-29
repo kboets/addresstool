@@ -14,9 +14,7 @@ permissions:
 
 
 jobs:
-
   backend:
-    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -62,7 +60,6 @@ jobs:
         run: mvn -B -ntp clean verify
 
   frontend:
-    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
