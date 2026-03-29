@@ -2,7 +2,7 @@ name: Deploy to release branches
 on:
   push:
     branches:
-      - 'release/**'
+      - release/**
     paths:
       - addresstool-api/**
       - addresstool-frontend/**
