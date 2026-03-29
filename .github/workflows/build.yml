@@ -14,9 +14,7 @@ permissions:
 
 
 jobs:
-
   backend:
-    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -30,6 +28,10 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
+
+      - name: Make Maven wrapper executable
+        run: chmod +x mvnw
+
       - name: Calculate next Maven version
         shell: bash
         run: |
@@ -62,7 +64,6 @@ jobs:
         run: mvn -B -ntp clean verify
 
   frontend:
-    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
