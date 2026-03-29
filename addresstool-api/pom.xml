@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>be.boets</groupId>
 	<artifactId>addresstool</artifactId>
-	<version>0.15.0</version>
+	<version>0.15.1</version>
 	<packaging>jar</packaging>
 	<name>addresstool</name>
 	<description>addressEntity tool</description>
