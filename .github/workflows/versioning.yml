@@ -1,0 +1,57 @@
+name: Update Version
+on:
+  push:
+    branches:
+      - release/*
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./addresstool-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          # This token is the key to bypassing branch protection
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '25'
+
+      - name: Make Maven wrapper executable
+        run: chmod +x mvnw
+
+      - name: Read current version
+        id: version
+        shell: bash
+        run: |
+          CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
+          echo "current_version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+
+      - name: Bump patch version
+        id: bump
+        shell: bash
+        run: |
+          CURRENT_VERSION="${{ steps.version.outputs.current_version }}"
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
+          NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+          echo "next_version=${NEXT_VERSION}" >> "$GITHUB_OUTPUT"
+          
+          ./mvnw -B -ntp versions:set -DnewVersion="${NEXT_VERSION}" -DgenerateBackupPoms=false
+
+      - name: Commit version bump
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add pom.xml
+          # [skip ci] prevents this commit from starting the workflow all over again
+          git commit -m "chore: bump Maven version to ${{ steps.bump.outputs.next_version }} [skip ci]"
+          git push
