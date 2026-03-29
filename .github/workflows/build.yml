@@ -13,10 +13,6 @@ on:
       - feature/*
       - bugfix/*
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   backend:
     runs-on: ubuntu-latest
@@ -32,58 +28,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '25'
-
-      - name: Make Maven wrapper executable
-        run: chmod +x mvnw
-
-      - name: Calculate next Maven version
-        shell: bash
-        run: |
-            set -euo pipefail
-            
-            BRANCH_NAME="${{ github.head_ref }}"
-            CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
-            
-            IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
-            
-            case "${BRANCH_NAME}" in
-              feature/*)
-                MINOR=$((MINOR + 1))
-                PATCH=0
-                ;;
-              bugfix/*)
-                PATCH=$((PATCH + 1))
-                ;;
-              *)
-                echo "No version bump for branch ${BRANCH_NAME}"
-                exit 0
-                ;;
-            esac
-            
-            NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-            echo "Current version: ${CURRENT_VERSION}"
-            echo "Next version: ${NEXT_VERSION}"
-          
-            ./mvnw -B -ntp versions:set \
-            -DnewVersion="${NEXT_VERSION}" \
-            -DgenerateBackupPoms=false
-
-      - name: Commit Maven version update
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet -- addresstool-api/pom.xml; then
-            echo "No version change to commit."
-            exit 0
-          fi
-
-          git add addresstool-api/pom.xml
-          git commit -m "chore: bump Maven version to ${NEXT_VERSION}"
-          git push origin HEAD:${{ github.head_ref }}    
 
       - name: maven clean verify
         run: mvn -B -ntp clean verify
