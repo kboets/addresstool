@@ -9,6 +9,7 @@ on:
       - addresstool-frontend/**
       - .github/workflows/build.yml
 
+
 jobs:
   backend:
     runs-on: ubuntu-latest
