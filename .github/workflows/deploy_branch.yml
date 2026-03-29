@@ -96,67 +96,67 @@ jobs:
             echo " Deleted ${REPO}:${TAG}"
           done
 
-  bump-version:
-    needs: [backend, frontend]
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./addresstool-api
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v6
-        with:
-          fetch-depth: 0
-
-      - name: Setup Java
-        uses: actions/setup-java@v5
-        with:
-          distribution: temurin
-          java-version: '25'
-
-      - name: Make Maven wrapper executable
-        run: chmod +x mvnw
-
-      - name: Read current version
-        id: version
-        shell: bash
-        run: |
-          set -euo pipefail
-          CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
-          echo "current_version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
-
-      - name: Bump patch version
-        id: bump
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          CURRENT_VERSION="${{ steps.version.outputs.current_version }}"
-          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
-          NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
-
-          echo "next_version=${NEXT_VERSION}" >> "$GITHUB_OUTPUT"
-
-          ./mvnw -B -ntp versions:set \
-            -DnewVersion="${NEXT_VERSION}" \
-            -DgenerateBackupPoms=false
-
-      - name: Commit version bump
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet -- pom.xml; then
-            echo "No version change to commit."
-            exit 0
-          fi
-
-          git add pom.xml
-          git commit -m "chore: bump Maven version to ${{ steps.bump.outputs.next_version }}"
-          git push
+#  bump-version:
+#    needs: [backend, frontend]
+#    runs-on: ubuntu-latest
+#    defaults:
+#      run:
+#        working-directory: ./addresstool-api
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v6
+#        with:
+#          fetch-depth: 0
+#
+#      - name: Setup Java
+#        uses: actions/setup-java@v5
+#        with:
+#          distribution: temurin
+#          java-version: '25'
+#
+#      - name: Make Maven wrapper executable
+#        run: chmod +x mvnw
+#
+#      - name: Read current version
+#        id: version
+#        shell: bash
+#        run: |
+#          set -euo pipefail
+#          CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
+#          echo "current_version=${CURRENT_VERSION}" >> "$GITHUB_OUTPUT"
+#
+#      - name: Bump patch version
+#        id: bump
+#        shell: bash
+#        run: |
+#          set -euo pipefail
+#
+#          CURRENT_VERSION="${{ steps.version.outputs.current_version }}"
+#          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
+#          NEXT_VERSION="${MAJOR}.${MINOR}.$((PATCH + 1))"
+#
+#          echo "next_version=${NEXT_VERSION}" >> "$GITHUB_OUTPUT"
+#
+#          ./mvnw -B -ntp versions:set \
+#            -DnewVersion="${NEXT_VERSION}" \
+#            -DgenerateBackupPoms=false
+#
+#      - name: Commit version bump
+#        shell: bash
+#        run: |
+#          set -euo pipefail
+#
+#          git config user.name "github-actions[bot]"
+#          git config user.email "github-actions[bot]@users.noreply.github.com"
+#
+#          if git diff --quiet -- pom.xml; then
+#            echo "No version change to commit."
+#            exit 0
+#          fi
+#
+#          git add pom.xml
+#          git commit -m "chore: bump Maven version to ${{ steps.bump.outputs.next_version }}"
+#          git push
 
   bump-version:
     needs: [ backend, frontend ]
