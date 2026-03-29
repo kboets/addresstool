@@ -8,6 +8,7 @@ on:
       - addresstool-frontend/**
       - .github/workflows/deploy.yml
 
+
 jobs:
   backend:
     runs-on: ubuntu-latest
