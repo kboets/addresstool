@@ -8,8 +8,60 @@ on:
       - addresstool-frontend/**
       - .github/workflows/build.yml
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
+
+  versioning:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+    defaults:
+      run:
+        working-directory: ./addresstool-api
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.head_ref }} # Checkout the source branch of the PR
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+
+      - name: Determine & Apply Bump
+        id: bump
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ $BRANCH == feature/* ]]; then
+            mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0 versions:commit
+          elif [[ $BRANCH == bugfix/* ]]; then
+            mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit
+          fi
+
+      - name: Get Version
+        id: get_version
+        run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
+
+      - name: Persist to PR Branch
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if git commit -am "chore: bump version to ${{ steps.get_version.outputs.version }}"; then
+            git push
+          else
+            echo "No version change needed."
+          fi  
+
   backend:
+    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -17,15 +69,20 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
+
       - name: Setup Java
         uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
+
       - name: maven clean verify
         run: mvn -B -ntp clean verify
 
   frontend:
+    needs: versioning
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -33,6 +90,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
