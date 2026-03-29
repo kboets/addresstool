@@ -109,7 +109,7 @@ jobs:
         with:
           fetch-depth: 0
           # This token is the key to bypassing branch protection
-          #token: ${{ secrets.GH_PAT }}
+          token: ${{ secrets.GH_PAT }}
 
       - name: Setup Java
         uses: actions/setup-java@v5
