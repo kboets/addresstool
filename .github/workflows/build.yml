@@ -27,8 +27,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.head_ref }} # Checkout the source branch of the PR
+          ref: ${{ github.head_ref }}
           fetch-depth: 0
 
       - name: Setup Java
@@ -40,11 +39,20 @@ jobs:
       - name: Determine & Apply Bump
         id: bump
         run: |
-          BRANCH="${{ github.head_ref }}"
-          if [[ $BRANCH == feature/* ]]; then
-            mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0 versions:commit
-          elif [[ $BRANCH == bugfix/* ]]; then
-            mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit
+          # 1. Check if the last commit was already a bump to prevent loops
+          LAST_COMMIT_MSG=$(git log -1 --pretty=%B)
+          if [[ "$LAST_COMMIT_MSG" == "chore: bump version"* ]]; then
+            echo "Version already bumped. Skipping Maven update."
+            echo "skipped=true" >> $GITHUB_OUTPUT
+          else
+            # 2. Perform the actual bump logic
+            BRANCH="${{ github.head_ref }}"
+            if [[ $BRANCH == feature/* ]]; then
+              mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0 versions:commit
+            elif [[ $BRANCH == bugfix/* ]]; then
+              mvn build-helper:parse-version versions:set -DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion} versions:commit
+            fi
+            echo "skipped=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Get Version
@@ -52,13 +60,15 @@ jobs:
         run: echo "version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
       - name: Persist to PR Branch
+        # Only run this if we didn't just skip the bump
+        if: steps.bump.outputs.skipped == 'false'
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           if git commit -am "chore: bump version to ${{ steps.get_version.outputs.version }}"; then
             git push
           else
-            echo "No version change needed."
+            echo "No changes to commit."
           fi  
 
 
