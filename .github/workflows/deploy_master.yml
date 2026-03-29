@@ -1,0 +1,147 @@
+name: Deploy to master
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - addresstool-api/**
+      - addresstool-frontend/**
+      - .github/workflows/deploy.yml
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: addresstool-api/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Build with Maven
+        run: mvn -B -ntp clean verify
+
+      - name: Check Docker Hub username
+        run: echo "Docker Hub user is set"
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          docker build -t kubo1601/addresstool-api:${{ github.run_number }} \
+                       -t kubo1601/addresstool-api:latest .
+
+      - name: Push docker image
+        run: |
+          docker push kubo1601/addresstool-api:${{ github.run_number }}
+          docker push kubo1601/addresstool-api:latest
+
+      - name: Cleanup old backend Docker Hub tags
+        shell: bash
+        run: |
+          set -euo pipefail  
+          REPO="kubo1601/addresstool-api"
+          KEEP_COUNT=2
+          
+          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}" \
+            | jq -r .token)
+          
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REPO}/tags?page_size=100" \
+            -H "Authorization: Bearer ${TOKEN}" \
+             | jq -r '.results[].name')
+          
+          TO_DELETE=$(echo "${TAGS}" \
+            | grep -E '^[0-9]+$' \
+            | sort -nr \
+            | tail -n +$((KEEP_COUNT + 1)))
+          
+           if [ -z "${TO_DELETE}" ]; then
+            echo "No old backend tags to delete."
+            exit 0
+           fi
+          
+           echo "Deleting backend tags:"
+           echo "${TO_DELETE}"
+          
+           for TAG in ${TO_DELETE}; do
+            curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              "https://hub.docker.com/v2/repositories/${REPO}/tags/${TAG}/" \
+              -H "Authorization: Bearer ${TOKEN}"
+            echo " Deleted ${REPO}:${TAG}"
+           done
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: addresstool-frontend/
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build frontend Docker image
+        run: |
+          docker build -t kubo1601/addresstool-frontend:${{ github.run_number }} \
+                       -t kubo1601/addresstool-frontend:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push kubo1601/addresstool-frontend:${{ github.run_number }}
+          docker push kubo1601/addresstool-frontend:latest
+
+      - name: Cleanup old frontend Docker Hub tags
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          REPO="kubo1601/addresstool-frontend"
+          KEEP_COUNT=2
+
+          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\":\"${{ secrets.DOCKERHUB_USERNAME }}\",\"password\":\"${{ secrets.DOCKERHUB_TOKEN }}\"}" \
+            | jq -r .token)
+
+          TAGS=$(curl -s "https://hub.docker.com/v2/repositories/${REPO}/tags?page_size=100" \
+            -H "Authorization: Bearer ${TOKEN}" \
+            | jq -r '.results[].name')
+
+          TO_DELETE=$(echo "${TAGS}" \
+            | grep -E '^[0-9]+$' \
+            | sort -nr \
+            | tail -n +$((KEEP_COUNT + 1)))
+
+          if [ -z "${TO_DELETE}" ]; then
+            echo "No old frontend tags to delete."
+            exit 0
+          fi
+
+          echo "Deleting frontend tags:"
+          echo "${TO_DELETE}"
+
+          for TAG in ${TO_DELETE}; do
+            curl -s -o /dev/null -w "%{http_code}" -X DELETE \
+              "https://hub.docker.com/v2/repositories/${REPO}/tags/${TAG}/" \
+              -H "Authorization: Bearer ${TOKEN}"
+            echo " Deleted ${REPO}:${TAG}"
+          done
+
+  
