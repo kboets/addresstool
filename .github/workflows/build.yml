@@ -1,8 +1,9 @@
-name: Addresstool workflow
+name: Test and build Workflow
 on:
   pull_request:
     branches:
      - master
+     - release/*
     paths:
       - addresstool-api/**
       - addresstool-frontend/**
