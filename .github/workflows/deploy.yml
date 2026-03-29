@@ -1,8 +1,9 @@
-name: Deploy
+name: Create and push Image
 on:
   push:
     branches:
       - master
+      - release/*
     paths:
       - addresstool-api/**
       - addresstool-frontend/**
