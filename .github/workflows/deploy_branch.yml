@@ -1,8 +1,8 @@
-name: Deploy
+name: Deploy to release branches
 on:
   push:
     branches:
-      - master
+      - 'release/**'
     paths:
       - addresstool-api/**
       - addresstool-frontend/**
