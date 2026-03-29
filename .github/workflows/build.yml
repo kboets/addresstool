@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
 
       - name: Setup Java
         uses: actions/setup-java@v5
@@ -34,32 +36,37 @@ jobs:
       - name: Calculate next Maven version
         shell: bash
         run: |
-            set -euo pipefail
-            
-            BRANCH_NAME="${{ github.head_ref }}"
-            CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
-            
-            IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
-            
-            case "${BRANCH_NAME}" in
-              feature/*)
-                MINOR=$((MINOR + 1))
-                PATCH=0
-                ;;
-              bugfix/*)
-                PATCH=$((PATCH + 1))
-                ;;
-              *)
-                echo "No version bump for branch ${BRANCH_NAME}"
-                exit 0
-                ;;
-            esac
-            
-            NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-            echo "Current version: ${CURRENT_VERSION}"
-            echo "Next version: ${NEXT_VERSION}"
+          set -euo pipefail
           
-            ./mvnw -B -ntp versions:set \
+          BRANCH_NAME="${{ github.head_ref }}"
+          CURRENT_VERSION=$(./mvnw -q -ntp help:evaluate -Dexpression=project.version -DforceStdout)
+          
+          IFS='.' read -r MAJOR MINOR PATCH <<< "${CURRENT_VERSION}"
+          
+          case "${BRANCH_NAME}" in
+            feature/*)
+              MINOR=$((MINOR + 1))
+              PATCH=0
+              ;;
+            bugfix/*)
+              PATCH=$((PATCH + 1))
+              ;;
+            *)
+              echo "No version bump for branch ${BRANCH_NAME}"
+              exit 0
+              ;;
+          esac
+          
+          NEXT_VERSION="${MAJOR}.${MINOR}.${PATCH}"
+          echo "Current version: ${CURRENT_VERSION}"
+          echo "Next version: ${NEXT_VERSION}"
+          echo "NEXT_VERSION=${NEXT_VERSION}" >> "$GITHUB_ENV"
+
+      - name: Update Maven version
+        shell: bash
+        run: |
+          set -euo pipefail
+          ./mvnw -B -ntp versions:set \
             -DnewVersion="${NEXT_VERSION}" \
             -DgenerateBackupPoms=false
 
@@ -67,21 +74,21 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
+          
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          if git diff --quiet -- addresstool-api/pom.xml; then
+          
+          if git diff --quiet -- pom.xml; then
             echo "No version change to commit."
             exit 0
           fi
-
-          git add addresstool-api/pom.xml
+          
+          git add pom.xml
           git commit -m "chore: bump Maven version to ${NEXT_VERSION}"
-          git push origin HEAD:${{ github.head_ref }}    
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: maven clean verify
-        run: mvn -B -ntp clean verify
+        run: ./mvnw -B -ntp clean verify
 
   frontend:
     runs-on: ubuntu-latest
