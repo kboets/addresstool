@@ -148,8 +148,7 @@ jobs:
           done
 
   bump-version:
-    needs: backend
-    needs: frontend
+    needs: [backend, frontend]
     runs-on: ubuntu-latest
     defaults:
       run:
