@@ -15,6 +15,7 @@ on:
       - bugfix/*
 
 jobs:
+
   backend-unit-tests:
     runs-on: ubuntu-latest
     defaults:
@@ -33,7 +34,7 @@ jobs:
       - name: Unit tests
         run: mvn -B -ntp test
 
-    backend-integration-tests:
+  backend-integration-tests:
       runs-on: ubuntu-latest
       defaults:
         run:
