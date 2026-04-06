@@ -1,3 +1,4 @@
+DELETE FROM addresstool.person;
 INSERT INTO addresstool.person (id, first_name, last_name, birth_date, street, number, box, postal_code, city_name)
 VALUES (1, 'John', 'Doh', '1975-02-04', 'Kaulillerweg', 105, null, '3910', 'Pelt');
 

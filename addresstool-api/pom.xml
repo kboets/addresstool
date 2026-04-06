@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>be.boets</groupId>
 	<artifactId>addresstool</artifactId>
-	<version>0.17.0</version>
+	<version>0.19.1</version>
 	<packaging>jar</packaging>
 	<name>addresstool</name>
 	<description>addressEntity tool</description>
@@ -129,6 +129,27 @@
 							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/*IntegrationTest*</exclude>
+						<exclude>**/*IT*</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<configuration>
+					<classesDirectory>${project.build.outputDirectory}</classesDirectory>
+					<includes>
+						<include>**/*IntegrationTest*</include>
+						<include>**/*IT*</include>
+					</includes>
 				</configuration>
 			</plugin>
 		</plugins>
