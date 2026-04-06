@@ -50,7 +50,7 @@ jobs:
             java-version: '25'
 
         - name: Integration tests
-          run: mvn -B -ntp failsafe:integration-test failsafe:verify
+          run: mvn -B -ntp verify
 
   frontend:
     runs-on: ubuntu-latest
