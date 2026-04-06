@@ -4,7 +4,6 @@ import be.boets.addresstool.person.Person;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.client.RestTestClient;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
