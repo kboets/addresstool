@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class SearchIT extends AbstractTestConfig {
 
+    public static final String SEARCH_PATH = "/api/search";
     @Autowired
     private RestTestClient restTestClient;
 
@@ -25,7 +26,7 @@ public class SearchIT extends AbstractTestConfig {
                 .build();
 
         Person[] responseBody = restTestClient.post()
-                .uri("/api/search")
+                .uri(SEARCH_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(criteria)
                 .exchange()
@@ -48,7 +49,7 @@ public class SearchIT extends AbstractTestConfig {
                 .build();
 
         Person[] responseBody = restTestClient.post()
-                .uri("/api/search")
+                .uri(SEARCH_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(criteria)
                 .exchange()
@@ -70,7 +71,7 @@ public class SearchIT extends AbstractTestConfig {
                 .build();
 
         Person[] responseBody = restTestClient.post()
-                .uri("/api/search")
+                .uri(SEARCH_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(criteria)
                 .exchange()
@@ -92,7 +93,7 @@ public class SearchIT extends AbstractTestConfig {
                 .build();
 
         Person[] responseBody = restTestClient.post()
-                .uri("/api/search")
+                .uri(SEARCH_PATH)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(criteria)
                 .exchange()
