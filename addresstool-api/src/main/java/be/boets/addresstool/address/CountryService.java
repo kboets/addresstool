@@ -17,15 +17,22 @@ public class CountryService {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(CountryService.class);
     private final CountryClientService countryClientService;
     private final CountryRepository countryRepository;
+    private final CountryMapper countryMapper;
 
-    public CountryService(CountryClientService countryClientService, CountryRepository countryRepository) {
+    public CountryService(CountryClientService countryClientService, CountryRepository countryRepository, CountryMapper countryMapper) {
         this.countryClientService = countryClientService;
         this.countryRepository = countryRepository;
+        this.countryMapper = countryMapper;
     }
+
+    public List<Country> getAllEuropeanPhoneCodes() {
+        return countryMapper.toCountryRecords(countryRepository.findAll());
+    }
+
 
     @EventListener(ApplicationReadyEvent.class)
     @Transactional
-    public void loadCountries() {
+    protected void loadCountries() {
         if (countryRepository.count() == 0L) {
             List<CountryResponse> allEuropeanData = countryClientService.findAllEuropean();
             List<CountryEntity> countries = allEuropeanData.stream()
