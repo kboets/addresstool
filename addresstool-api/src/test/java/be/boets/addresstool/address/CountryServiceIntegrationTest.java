@@ -36,6 +36,9 @@ public class CountryServiceIntegrationTest {
     private CountryRepository countryRepository;
     @MockitoBean
     private CountryClientService countryClientService;
+    @MockitoBean
+    private CountryMapper countryMapper;
+
 
     @Test
     public void loadCountries() {
