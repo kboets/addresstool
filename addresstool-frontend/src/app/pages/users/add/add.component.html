@@ -8,16 +8,31 @@
         <div class="col-2">
           <label for="firstName">Voornaam</label>
           <input id="firstName" type="text" formControlName="firstName" />
+          @if (personForm.get('firstName')?.touched && personForm.get('firstName')?.invalid) {
+            <div class="text-danger mt-1">
+              <small style="color: red">Voornaam is verplicht.</small>
+            </div>
+          }
         </div>
         <div class="col-3">
           <label for="lastName">Familienaam</label>
           <input id="lastName" type="text" formControlName="lastName" />
+          @if (personForm.get('lastName')?.touched && personForm.get('lastName').hasError('required')) {
+            <div class="text-danger mt-1">
+              <small style="color: red">Naam is verplicht.</small>
+            </div>
+          }
         </div>
       </div>
       <div class="row row-space mt-2">
         <div class="col-2">
-          <label for="birthDate">geboorte dag</label>
+          <label for="birthDate">geboortedag</label>
           <input id="birthDate" type="date" formControlName="birthDate" />
+          <div class="text-danger mt-1">
+          @if (personForm.get('birthDate')?.touched && personForm.get('birthDate').hasError('required')) {
+              <small style="color: red">Geboortedatum is verplicht.</small>
+          }
+          </div>
         </div>
         <div class="col-3">
           <label for="phoneNumber">Telefoonnummer</label>
@@ -46,6 +61,20 @@
           </div>
         </div>
       </div>
+      <div class="row row-space mt-2">
+        <div class="col-2">
+          <label for="email">E-mail</label>
+          <input id="email" type="email" formControlName="email" class="form-control" />
+
+          @if (personForm.get('email')?.touched && personForm.get('email')?.invalid) {
+            <div class="text-danger mt-1">
+              @if (personForm.get('email')?.hasError('email')) {
+                Ongeldig e-mailadres.
+              }
+            </div>
+          }
+        </div>
+      </div>
     </div>
 
     <div class="mt-4">
@@ -63,6 +92,11 @@
                 }
               </datalist>
             </div>
+            @if (personForm.get('address.city.name')?.touched && personForm.get('address.city.name')?.invalid) {
+              <div class="text-danger mt-1">
+                <small style="color: red">Gemeente is verplicht.</small>
+              </div>
+            }
           </div>
           <div class="col-1">
             <div class="form-group">
@@ -70,6 +104,11 @@
               <input id="postalCode" type="text" inputmode="numeric" maxlength="4" pattern="[0-9]*" formControlName="postalCode" />
             </div>
           </div>
+          @if (personForm.get('address.city.postalCode')?.touched && personForm.get('address.city.postalCode')?.invalid) {
+            <div class="text-danger mt-1">
+              <small style="color: red">Postcode is verplicht.</small>
+            </div>
+          }
         </div>
         <div class="row row-space mt-2">
           <div class="col-4">
@@ -82,12 +121,22 @@
                 }
               </datalist>
             </div>
+            @if (personForm.get('address.street')?.touched && personForm.get('address.street')?.invalid) {
+              <div class="text-danger mt-1">
+                <small style="color: red">Straat is verplicht.</small>
+              </div>
+            }
           </div>
           <div class="col-1">
             <div class="form-group">
               <label for="number">Huisnummer</label>
               <input id="number" type="text" formControlName="number" />
             </div>
+            @if (personForm.get('address.number')?.touched && personForm.get('address.number')?.invalid) {
+              <div class="text-danger mt-1">
+                <small style="color: red">Huisnummer is verplicht.</small>
+              </div>
+            }
           </div>
           <div class="col-1">
             <div class="form-group">
@@ -116,6 +165,7 @@
             <th>Naam</th>
             <th>Geboortedatum</th>
             <th>Telefoonnummer</th>
+            <th>E-mail</th>
             <th>Adres</th>
             <th>Actions</th>
           </tr>
@@ -126,6 +176,7 @@
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
               <td>{{ person.phoneNumber | phoneFormat }}</td>
+              <td>{{ person.email }}</td>
               <td>
                 {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address.city.postalCode }} {{ person.address.city.name }}
               </td>
@@ -135,7 +186,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="5" style="text-align: center">No people in the list</td>
+              <td colspan="6" style="text-align: center">No people in the list</td>
             </tr>
           }
         </tbody>

@@ -1,10 +1,10 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HotToastService } from '@ngxpert/hot-toast';
-import { AddressService } from '@shared/services/address-service';
-import { UserService } from '../user-service';
-import { Person } from '@shared/models/person';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, effect, inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HotToastService} from '@ngxpert/hot-toast';
+import {AddressService} from '@shared/services/address-service';
+import {UserService} from '../user-service';
+import {Person} from '@shared/models/person';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CountryService} from "@shared/services/country-service";
 
 @Component({
@@ -48,6 +48,7 @@ export class AddComponent implements OnInit {
       lastName: ['', Validators.required],
       birthDate: ['', Validators.required],
       phoneNumber: [''],
+      email: ['', [Validators.email]],
       countryCode: [''],
       address: this._fb.group({
         street: ['', Validators.required],
@@ -274,30 +275,9 @@ export class AddComponent implements OnInit {
     if (belgium) {
       this.selectedCountry = belgium;
       this.personForm.patchValue({
-        countryCode: belgium.phoneCode,
-        phoneNumber: belgium.phoneCode,
+        countryCode: belgium.phoneCode
       });
     }
-  }
-
-  public initForm(): void {
-    this.personForm.setValue({
-      firstName: '',
-      lastName: '',
-      birthDate: '',
-      address: {
-        street: '',
-        number: null,
-        box: '',
-        city: {
-          name: '',
-          postalCode: '',
-          isMain: true,
-        },
-      },
-    });
-    this.addressService.resetPostalCode();
-    this.addressService.resetCityName();
   }
 
   private onPostalCodeChange(): void {
