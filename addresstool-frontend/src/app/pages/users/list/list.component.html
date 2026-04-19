@@ -9,8 +9,10 @@
         <thead>
           <tr>
             <th>Naam</th>
-            <th>Geboortedatum</th>
             <th>Adres</th>
+            <th>Telefoonnummer</th>
+            <th>E-mail</th>
+            <th>Geboortedatum</th>
             <th>Acties</th>
           </tr>
         </thead>
@@ -18,11 +20,13 @@
           @for (person of people; track person.id) {
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
-              <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
               <td>
                 {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }},
                 {{ person.address.city.postalCode }} {{ person.address.city.name }}
               </td>
+              <td>{{ person.phoneNumber | phoneFormat }}</td>
+              <td>{{ person.email }}</td>
+              <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
               <td>
                 <div class="btn-group">
                   <button type="button" class="btn btn-outline-primary btn-sm" (click)="editPerson(person)">Edit</button>
@@ -32,7 +36,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="4" style="text-align: center">Geen personen gevonden</td>
+              <td colspan="6" style="text-align: center">Geen personen gevonden</td>
             </tr>
           }
         </tbody>
@@ -46,8 +50,6 @@
         <select id="pageSize" class="form-select form-select-sm d-inline-block w-auto mt-2" [(ngModel)]="pageSize" (change)="onPageSizeChange()">
           <option [value]="5">5</option>
           <option [value]="10">10</option>
-          <option [value]="20">20</option>
-          <option [value]="50">50</option>
         </select>
       </div>
 
