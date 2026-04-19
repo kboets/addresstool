@@ -1,10 +1,11 @@
-import { Component, effect, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HotToastService } from '@ngxpert/hot-toast';
-import { AddressService } from '@shared/services/address-service';
-import { UserService } from '../user-service';
-import { Person } from '@shared/models/person';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, effect, inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {HotToastService} from '@ngxpert/hot-toast';
+import {AddressService} from '@shared/services/address-service';
+import {UserService} from '../user-service';
+import {Person} from '@shared/models/person';
+import {ActivatedRoute, Router} from '@angular/router';
+import {CountryService} from "@shared/services/country-service";
 
 @Component({
   selector: 'app-list',
@@ -15,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AddComponent implements OnInit {
   private addressService = inject(AddressService);
   private personService = inject(UserService);
+  private countryService = inject(CountryService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
 
@@ -29,6 +31,8 @@ export class AddComponent implements OnInit {
   streetNamesError = this.addressService.streetsError;
 
   personForm: FormGroup;
+  selectedCountry: any = null;
+  countries: any[] = [];
   people: Person[] = [];
   isLoading = false;
   isEditing = false;
@@ -43,6 +47,9 @@ export class AddComponent implements OnInit {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       birthDate: ['', Validators.required],
+      phoneNumber: [''],
+      email: ['', [Validators.email]],
+      countryCode: [''],
       address: this._fb.group({
         street: ['', Validators.required],
         number: [null, [Validators.required, Validators.min(1)]],
@@ -65,6 +72,7 @@ export class AddComponent implements OnInit {
 
   ngOnInit() {
     this.onPostalCodeChange();
+    this.loadCountries();
 
     this.route.queryParamMap.subscribe((params) => {
       const personId = params.get('personId');
@@ -115,15 +123,74 @@ export class AddComponent implements OnInit {
     }
   }
 
+  private loadCountries() {
+    this.countryService.getEuropeanCountries().subscribe({
+      next: (countries) => {
+        this.countries = countries;
+        const belgium = countries.find(c => c.name.toLowerCase() === 'belgium');
+        if (belgium) {
+          this.selectedCountry = belgium;
+          this.personForm.patchValue({
+            countryCode: belgium.phoneCode
+          });
+        }
+      },
+      error: (error) => {
+        this._toast.error('Kan landen niet laden.');
+      }
+    });
+  }
+
+  selectCountry(country: any) {
+    this.selectedCountry = country;
+    this.onCountryChange(country.phoneCode);
+  }
+
+  onCountryChange(selectedPhoneCode: string) {
+    let currentNumber = this.personForm.get('phoneNumber')?.value || '';
+
+    // Remove any existing phone code if present at the start
+    // This is a simple logic, it assumes if the number starts with any of our known phone codes, we might want to replace it.
+    // However, the requirement says "Once selected this international phone code is automatically added to the phone number"
+
+    // Let's just prepend it if it's not already there or if it's different.
+    // Better: just set the phone number to start with the code if it's empty or doesn't start with a '+'
+    if (!currentNumber.startsWith('+')) {
+       this.personForm.patchValue({
+         phoneNumber: selectedPhoneCode + currentNumber
+       });
+    } else {
+       // If it already starts with +, we might want to replace the old code with the new one.
+       // This gets complicated without knowing the old code.
+       // Let's assume the user wants the selected code to BE the prefix.
+
+       // Find if currentNumber starts with any known phone code from our list
+       const oldCode = this.countries.find(c => currentNumber.startsWith(c.phoneCode));
+       if (oldCode) {
+         const newNumber = selectedPhoneCode + currentNumber.substring(oldCode.phoneCode.length);
+         this.personForm.patchValue({
+           phoneNumber: newNumber
+         });
+       } else {
+         // If it starts with + but not a known code, just replace the first part until first space or just prepend?
+         // Simplest: just replace the prefix.
+         this.personForm.patchValue({
+           phoneNumber: selectedPhoneCode
+         });
+       }
+    }
+  }
+
   onSubmit() {
     if (this.personForm.valid) {
-      const personData: Person = this.personForm.value;
+      this.verifyPhoneNumber();
+      const { countryCode, ...personData } = this.personForm.value;
       if (this.isEditing) {
         const personToUpdate = { ...personData, id: this.currentPersonId };
         this.personService.update(personToUpdate).subscribe({
           next: () => {
             this._toast.success('Persoon succesvol gewijzigd.');
-            this.loadPeople(personData as Person);
+            this.loadPeople(personToUpdate as Person);
             this.resetForm();
           },
           error: (error) => {
@@ -165,6 +232,14 @@ export class AddComponent implements OnInit {
     this.isEditing = true;
     this.currentPersonId = person.id;
     this.personForm.patchValue(person);
+
+    if (person.phoneNumber) {
+      const country = this.countries.find(c => person.phoneNumber.startsWith(c.phoneCode));
+      if (country) {
+        this.selectedCountry = country;
+        this.personForm.patchValue({ countryCode: country.phoneCode });
+      }
+    }
   }
 
   deletePerson(id: number) {
@@ -195,26 +270,14 @@ export class AddComponent implements OnInit {
     this.addressService.resetStreetNames();
     this.people = [];
     this.shouldShowPeople = false;
-  }
 
-  public initForm(): void {
-    this.personForm.setValue({
-      firstName: '',
-      lastName: '',
-      birthDate: '',
-      address: {
-        street: '',
-        number: null,
-        box: '',
-        city: {
-          name: '',
-          postalCode: '',
-          isMain: true,
-        },
-      },
-    });
-    this.addressService.resetPostalCode();
-    this.addressService.resetCityName();
+    const belgium = this.countries.find((c) => c.name.toLowerCase() === 'belgium');
+    if (belgium) {
+      this.selectedCountry = belgium;
+      this.personForm.patchValue({
+        countryCode: belgium.phoneCode
+      });
+    }
   }
 
   private onPostalCodeChange(): void {
@@ -244,4 +307,18 @@ export class AddComponent implements OnInit {
       replaceUrl: true,
     });
   }
+
+  private verifyPhoneNumber() {
+    let currentNumber = this.personForm.get('phoneNumber')?.value || '';
+    if (currentNumber !== '' && !currentNumber.startsWith('+')) {
+      if (currentNumber.startsWith(0)) {
+        // remove 0
+        currentNumber = currentNumber.slice(1);
+      }
+      this.personForm.patchValue({
+        phoneNumber: this.selectedCountry.phoneCode + currentNumber
+      });
+    }
+  }
+
 }

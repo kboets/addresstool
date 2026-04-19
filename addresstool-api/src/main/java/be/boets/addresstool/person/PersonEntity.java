@@ -29,6 +29,9 @@ public class PersonEntity implements Serializable {
     String lastName;
     @Column(nullable = false)
     private LocalDate birthDate;
+    private String phoneNumber;
+    private String email;
+
     @Embedded
     private AddressEntity addressEntity;
 
@@ -67,6 +70,22 @@ public class PersonEntity implements Serializable {
         this.birthDate = birthDate;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public AddressEntity getAddress() {
         return addressEntity;
     }
@@ -78,23 +97,25 @@ public class PersonEntity implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        PersonEntity person = (PersonEntity) o;
-        return Objects.equals(id, person.id) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(birthDate, person.birthDate) && Objects.equals(addressEntity, person.addressEntity);
+        PersonEntity that = (PersonEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(birthDate, that.birthDate) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(email, that.email) && Objects.equals(addressEntity, that.addressEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, birthDate, addressEntity);
+        return Objects.hash(id, firstName, lastName, birthDate, phoneNumber, email, addressEntity);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "PersonEntity{" +
                 "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", birthDate=" + birthDate +
-                ", address=" + addressEntity +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", email='" + email + '\'' +
+                ", addressEntity=" + addressEntity +
                 '}';
     }
 
@@ -104,6 +125,8 @@ public class PersonEntity implements Serializable {
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
+        private String phoneNumber;
+        private String email;
         private AddressEntity addressEntity;
 
         private PersonEntityBuilder() {
@@ -133,6 +156,16 @@ public class PersonEntity implements Serializable {
             return this;
         }
 
+        public PersonEntityBuilder withPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public PersonEntityBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
         public PersonEntityBuilder withAddressEntity(AddressEntity addressEntity) {
             this.addressEntity = addressEntity;
             return this;
@@ -144,6 +177,8 @@ public class PersonEntity implements Serializable {
             personEntity.setFirstName(firstName);
             personEntity.setLastName(lastName);
             personEntity.setBirthDate(birthDate);
+            personEntity.setPhoneNumber(phoneNumber);
+            personEntity.setEmail(email);
             personEntity.addressEntity = this.addressEntity;
             return personEntity;
         }

@@ -4,7 +4,7 @@ import be.boets.addresstool.address.Address;
 
 import java.time.LocalDate;
 
-public record Person(Integer id, String firstName, String lastName, LocalDate birthDate, Address address) {
+public record Person(Integer id, String firstName, String lastName, LocalDate birthDate, String phoneNumber, String email, Address address) {
 
 
     public static final class PersonBuilder {
@@ -12,6 +12,8 @@ public record Person(Integer id, String firstName, String lastName, LocalDate bi
         private String firstName;
         private String lastName;
         private LocalDate birthDate;
+        private String phoneNumber;
+        private String email;
         private Address address;
 
         private PersonBuilder() {
@@ -46,8 +48,18 @@ public record Person(Integer id, String firstName, String lastName, LocalDate bi
             return this;
         }
 
+        public PersonBuilder withPhoneNumber(String phoneNumber) {
+            this.phoneNumber = phoneNumber;
+            return this;
+        }
+
+        public PersonBuilder withEmail(String email) {
+            this.email = email;
+            return this;
+        }
+
         public Person build() {
-            return new Person(id, firstName, lastName, birthDate, address);
+            return new Person(id, firstName, lastName, birthDate, phoneNumber, email, address);
         }
     }
 }

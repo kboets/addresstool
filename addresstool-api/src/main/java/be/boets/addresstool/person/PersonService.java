@@ -80,6 +80,8 @@ public class PersonService {
                 .withBirthDate(person.birthDate())
                 .withFirstName(StringUtils.capitalize(person.firstName().toLowerCase()))
                 .withLastName(StringUtils.capitalize(person.lastName().toLowerCase()))
+                .withPhoneNumber(person.phoneNumber())
+                .withEmail(person.email())
                 .withAddress(upperCaseAddress)
                 .build();
     }

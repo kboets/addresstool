@@ -12,3 +12,5 @@ GET http://localhost:8080/addresstool/api/postalCodeByCityName/Averbode
 GET http://localhost:8080/addresstool/api/streetByPostalCode/3271
 ### GET streets by cityEntity
 GET http://localhost:8080/addresstool/api/streetByCity/Averbode
+###
+GET http://localhost:8080/addresstool/api/getEuropeanCodes
