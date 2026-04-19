@@ -8,10 +8,11 @@ import { SearchCriteria } from '@shared/models/searchCriteria';
 import { Person } from '@shared/models/person';
 import { Router } from '@angular/router';
 import { UserService } from '@pages/users/user-service';
+import {PhoneFormatPipe} from "@shared/pipes";
 
 @Component({
   selector: 'app-dashboard',
-  imports: [TranslateModule, CommonModule, ReactiveFormsModule],
+  imports: [TranslateModule, CommonModule, ReactiveFormsModule, PhoneFormatPipe],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss', '../users/add/add.component.scss'],
 })

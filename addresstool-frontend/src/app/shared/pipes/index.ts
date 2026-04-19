@@ -4,3 +4,4 @@ export * from './humanize.pipe';
 export * from './join-values.pipe';
 export * from './truncateText.pipe';
 export * from './timeAgo.pipe';
+export * from './phone-format.pipe';

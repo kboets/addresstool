@@ -19,6 +19,32 @@
           <label for="birthDate">geboorte dag</label>
           <input id="birthDate" type="date" formControlName="birthDate" />
         </div>
+        <div class="col-3">
+          <label for="phoneNumber">Telefoonnummer</label>
+          <div class="phone-input-group d-flex">
+            <div class="dropdown me-2">
+              <button class="btn btn-outline-secondary dropdown-toggle d-flex align-items-center" type="button" id="countryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                @if (selectedCountry) {
+                  <img [src]="selectedCountry.flagUrl" width="20" height="15" class="me-2" alt="flag">
+                  <span>{{ selectedCountry.phoneCode }}</span>
+                } @else {
+                  <span>Select</span>
+                }
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="countryDropdown" style="max-height: 300px; overflow-y: auto;">
+                @for (country of countries; track country.name) {
+                  <li>
+                    <button class="dropdown-item d-flex align-items-center" type="button" (click)="selectCountry(country)">
+                      <img [src]="country.flagUrl" width="20" height="15" class="me-2" alt="flag">
+                      <span>{{ country.name }} ({{ country.phoneCode | phoneFormat }})</span>
+                    </button>
+                  </li>
+                }
+              </ul>
+            </div>
+            <input id="phoneNumber" type="text" class="form-control" formControlName="phoneNumber" placeholder="Telefoonnummer" />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -89,6 +115,7 @@
           <tr>
             <th>Naam</th>
             <th>Geboortedatum</th>
+            <th>Telefoonnummer</th>
             <th>Adres</th>
             <th>Actions</th>
           </tr>
@@ -98,6 +125,7 @@
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ person.phoneNumber | phoneFormat }}</td>
               <td>
                 {{ person.address.street }} {{ person.address.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address.city.postalCode }} {{ person.address.city.name }}
               </td>
@@ -107,7 +135,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="4" style="text-align: center">No people in the list</td>
+              <td colspan="5" style="text-align: center">No people in the list</td>
             </tr>
           }
         </tbody>

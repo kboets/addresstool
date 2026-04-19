@@ -95,7 +95,8 @@
         <thead>
           <tr>
             <th>Naam</th>
-            <th>Geboorte datum</th>
+            <th>Geboortedatum</th>
+            <th>Telefoon nummer</th>
             <th>Adres</th>
             <th></th>
           </tr>
@@ -105,6 +106,7 @@
             <tr>
               <td>{{ person.firstName }} {{ person.lastName }}</td>
               <td>{{ person.birthDate | date: 'dd/MM/yyyy' }}</td>
+              <td>{{ person.phoneNumber | phoneFormat }}</td>
               <td>
                 {{ person.address?.street }} {{ person.address?.number }}{{ person.address.box ? '/' + person.address.box : '' }}, {{ person.address?.city?.postalCode }}
                 {{ person.address?.city?.name }}

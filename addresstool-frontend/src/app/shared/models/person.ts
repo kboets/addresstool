@@ -5,5 +5,6 @@ export interface Person {
   firstName: string;
   lastName: string;
   birthDate: Date;
+  phoneNumber: string;
   address: Address;
 }
