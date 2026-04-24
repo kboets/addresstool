@@ -6,6 +6,12 @@ import org.springframework.web.client.RestClient;
 
 import java.util.List;
 
+/**
+ * Alternative could be :
+ * https://opendata.brussel.be/explore/dataset/codes-ins-nis-postaux-belgique/api/?disjunctive.postal_code&disjunctive.refnis_code&disjunctive.gemeentenaam&disjunctive.nom_commune&disjunctive.code_ins_region&disjunctive.region_fr&disjunctive.region_nl&disjunctive.region_en
+ *
+ *
+ */
 @Service
 public class CityClientService {
 

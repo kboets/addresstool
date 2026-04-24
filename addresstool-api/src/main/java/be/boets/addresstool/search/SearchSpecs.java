@@ -22,7 +22,7 @@ public class SearchSpecs {
 
             // 2. Joins (Crucial for performance and avoiding Cartesian products)
             var address = root.join("addressEntity", JoinType.LEFT);
-            var city = address.join("cityEntity", JoinType.LEFT);
+            var city = address.join("addressCityEntity", JoinType.LEFT);
 
             addLikePredicate(predicates, cb, address.get("street"), criteria.street());
             addLikePredicate(predicates, cb, address.get("number"), criteria.number() != null ? criteria.number() : null);

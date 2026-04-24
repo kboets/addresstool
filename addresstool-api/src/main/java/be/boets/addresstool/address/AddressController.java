@@ -49,6 +49,9 @@ public class AddressController {
                 return ResponseEntity.ok(city.postalCode());
             }
         }
+        if (cities.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(cities.getFirst().postalCode());
     }
 

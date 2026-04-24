@@ -1,23 +1,50 @@
 package be.boets.addresstool.address;
 
-import jakarta.persistence.Column;
+import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class CityEntity implements Serializable {
-    @Column(name = "city_name", nullable = false)
+@Entity
+@Table(
+        name = "city",
+        schema = "addresstool"
+)
+public class CityEntity {
+
+    @Id
+    @SequenceGenerator(
+            name = "city_id_seq",
+            sequenceName = "city_id_seq",
+            schema = "addresstool",
+            allocationSize =  1)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "city_id_seq")
+    private Integer id;
+
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "postal_code", nullable = false)
+    @Column(nullable = false)
     private String postalCode;
 
-    protected CityEntity() {
+    private boolean main;
+
+    public CityEntity() {
     }
 
-    public CityEntity(String name, String postalCode) {
+    public CityEntity(String name, String postalCode, boolean main) {
         this.name = name;
         this.postalCode = postalCode;
+        this.main = main;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -36,53 +63,23 @@ public class CityEntity implements Serializable {
         this.postalCode = postalCode;
     }
 
-    @Override
-    public String toString() {
-        return "City{" +
-                "name='" + name + '\'' +
-                ", postalCode='" + postalCode + '\'' +
-                '}';
+    public boolean isMain() {
+        return main;
+    }
+
+    public void setMain(boolean main) {
+        this.main = main;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
-        CityEntity cityEntity = (CityEntity) o;
-        return Objects.equals(name, cityEntity.name) && Objects.equals(postalCode, cityEntity.postalCode);
+        CityEntity that = (CityEntity) o;
+        return main == that.main && Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(postalCode, that.postalCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, postalCode);
-    }
-
-
-    public static final class CityEntityBuilder {
-        private String name;
-        private String postalCode;
-
-        private CityEntityBuilder() {
-        }
-
-        public static CityEntityBuilder aCityEntity() {
-            return new CityEntityBuilder();
-        }
-
-        public CityEntityBuilder withName(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public CityEntityBuilder withPostalCode(String postalCode) {
-            this.postalCode = postalCode;
-            return this;
-        }
-
-        public CityEntity build() {
-            CityEntity cityEntity = new CityEntity();
-            cityEntity.setName(name);
-            cityEntity.setPostalCode(postalCode);
-            return cityEntity;
-        }
+        return Objects.hash(id, name, postalCode, main);
     }
 }
