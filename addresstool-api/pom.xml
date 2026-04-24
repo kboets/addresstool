@@ -23,6 +23,7 @@
 	<properties>
 		<java.version>25</java.version>
 		<mapstruct.version>1.6.3</mapstruct.version>
+		<apache.poi.version>5.5.1</apache.poi.version>
 		<testcontainer.version>1.21.4</testcontainer.version>
 	</properties>
 	<dependencies>
@@ -76,6 +77,16 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.20.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>${apache.poi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${apache.poi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mapstruct</groupId>

@@ -17,7 +17,7 @@ public class AddressEntity implements Serializable {
     private String box;
 
     @Embedded
-    private CityEntity cityEntity;
+    private AddressCityEntity addressCityEntity;
 
     public AddressEntity() {
     }
@@ -46,24 +46,24 @@ public class AddressEntity implements Serializable {
         this.box = box;
     }
 
-    public CityEntity getCity() {
-        return cityEntity;
+    public AddressCityEntity getCity() {
+        return addressCityEntity;
     }
 
-    public void setCity(CityEntity cityEntity) {
-        this.cityEntity = cityEntity;
+    public void setCity(AddressCityEntity addressCityEntity) {
+        this.addressCityEntity = addressCityEntity;
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         AddressEntity addressEntity = (AddressEntity) o;
-        return Objects.equals(number, addressEntity.number) && Objects.equals(street, addressEntity.street) && Objects.equals(box, addressEntity.box) && Objects.equals(cityEntity, addressEntity.cityEntity);
+        return Objects.equals(number, addressEntity.number) && Objects.equals(street, addressEntity.street) && Objects.equals(box, addressEntity.box) && Objects.equals(addressCityEntity, addressEntity.addressCityEntity);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(street, number, box, cityEntity);
+        return Objects.hash(street, number, box, addressCityEntity);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class AddressEntity implements Serializable {
                 "street='" + street + '\'' +
                 ", number=" + number +
                 ", box='" + box + '\'' +
-                ", city=" + cityEntity +
+                ", city=" + addressCityEntity +
                 '}';
     }
 
@@ -81,7 +81,7 @@ public class AddressEntity implements Serializable {
         private String street;
         private String number;
         private String box;
-        private CityEntity cityEntity;
+        private AddressCityEntity addressCityEntity;
 
         private AddressEntityBuilder() {
         }
@@ -105,8 +105,8 @@ public class AddressEntity implements Serializable {
             return this;
         }
 
-        public AddressEntityBuilder withCityEntity(CityEntity cityEntity) {
-            this.cityEntity = cityEntity;
+        public AddressEntityBuilder withCityEntity(AddressCityEntity addressCityEntity) {
+            this.addressCityEntity = addressCityEntity;
             return this;
         }
 
@@ -115,7 +115,7 @@ public class AddressEntity implements Serializable {
             addressEntity.setStreet(street);
             addressEntity.setNumber(number);
             addressEntity.setBox(box);
-            addressEntity.cityEntity = this.cityEntity;
+            addressEntity.addressCityEntity = this.addressCityEntity;
             return addressEntity;
         }
     }

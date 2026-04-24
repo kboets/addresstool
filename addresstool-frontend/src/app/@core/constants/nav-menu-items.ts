@@ -23,30 +23,32 @@ export const webSidebarMenuItems: NavMenuItem[] = [
     title: 'Overzicht',
     active: false,
     icon: 'fa-list',
-  },
-  {
-    href: '/products',
-    title: 'Products',
-    active: false,
-    icon: 'fa-box',
-    subItems: [
-      {
-        href: '/product-categories',
-        title: 'Product Categories',
-        active: false,
-      },
-      {
-        href: '/product-types',
-        title: 'Product Types',
-        active: false,
-      },
-      {
-        href: '/product-attributes',
-        title: 'Product Attributes',
-        active: false,
-      },
-    ],
-  },
+  }
+  // ,
+  // {
+  //   href: '/products',
+  //   title: 'Products',
+  //   active: false,
+  //   icon: 'fa-box',
+  //   subItems: [
+  //     {
+  //       href: '/product-categories',
+  //       title: 'Product Categories',
+  //       active: false,
+  //     },
+  //     {
+  //       href: '/product-types',
+  //       title: 'Product Types',
+  //       active: false,
+  //     },
+  //     {
+  //       href: '/product-attributes',
+  //       title: 'Product Attributes',
+  //       active: false,
+  //     },
+  //   ],
+  // }
+  ,
   {
     href: '/settings',
     title: 'Settings',
