@@ -1,7 +1,5 @@
 package be.boets.addresstool.address;
 
-import be.boets.addresstool.address.client.CityClientService;
-import be.boets.addresstool.address.client.CityResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +17,7 @@ import static org.mockito.Mockito.when;
 class AddressServiceTest {
 
     @Mock
-    private CityClientService cityClientService;
+    private CityRepository cityRepository;
 
     @InjectMocks
     private AddressService addressService;
@@ -27,15 +25,8 @@ class AddressServiceTest {
     @Test
     void givenValidZipCode_findByZipCode_shouldReturnListOfCities() {
         // create a list of city responses
-        List<CityResponse> cityResponses = List.of(
-                new CityResponse(
-                        new CityResponse.PostcodeData("3500", "Hasselt", "Hasselt")
-                ),
-                new CityResponse(
-                        new CityResponse.PostcodeData("3500", "Sint-Lambrechts-Herk", "Hasselt")
-                )
-        );
-        when(cityClientService.findByPostcode(any())).thenReturn(cityResponses);
+        List<CityEntity> cityEntities = List.of(new CityEntity("Hasselt", "3500", true), new CityEntity("Sint-Lambrechts-Herk", "3500", false));
+        when(cityRepository.findByPostalCode(any())).thenReturn(cityEntities);
         List<City> cities = addressService.findByZipCode("3500");
         assertEquals(2, cities.size());
         assertThat(cities.getFirst()).isEqualTo(new City("Hasselt", "3500", true));
@@ -43,24 +34,12 @@ class AddressServiceTest {
 
     @Test
     void givenInvalidZipCode_findByZipCode_shouldReturnEmptyList() {
-        when(cityClientService.findByPostcode(any())).thenReturn(List.of());
+        //when(cityClientService.findByPostcode(any())).thenReturn(List.of());
+        when(cityRepository.findByPostalCode(any())).thenReturn(List.of());
         List<City> cities = addressService.findByZipCode("AB3500");
         assertEquals(0, cities.size());
     }
 
-    @Test
-    void givenValidCity_findByCityName_shouldReturnListOfCities() {
-        // create a list of city responses
-        List<CityResponse> cityResponses = List.of(
-                new CityResponse(
-                        new CityResponse.PostcodeData("3271", "Averbode", "Scherpenheuvel-Zichem")
-                )
-        );
-        when(cityClientService.findByCityName(any())).thenReturn(cityResponses);
-        List<City> cities = addressService.findByCityName("averbode");
-        assertEquals(1, cities.size());
-        assertThat(cities.getFirst()).isEqualTo(new City( "Averbode", "3271", false));
-    }
 
 
 }

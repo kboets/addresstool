@@ -3,7 +3,7 @@ package be.boets.addresstool.person;
 import be.boets.addresstool.SharedPostgressContainer;
 import be.boets.addresstool.address.AddressEntity;
 import be.boets.addresstool.address.AddressMapperImpl;
-import be.boets.addresstool.address.CityEntity;
+import be.boets.addresstool.address.AddressCityEntity;
 import be.boets.addresstool.address.CityMapperImpl;
 import be.boets.addresstool.search.SearchCriteria;
 import org.junit.jupiter.api.AfterEach;
@@ -55,13 +55,13 @@ class PersonServiceIntegrationTest {
 
     @Test
     void savePerson() {
-        CityEntity cityEntity = CityEntity.CityEntityBuilder.aCityEntity()
+        AddressCityEntity addressCityEntity = AddressCityEntity.CityEntityBuilder.aCityEntity()
                 .withName("Averbode")
                 .withPostalCode("3271").build();
         AddressEntity addressEntity = AddressEntity.AddressEntityBuilder.anAddressEntity()
                 .withStreet("Springhaanstraat")
                 .withNumber("72")
-                .withCityEntity(cityEntity)
+                .withCityEntity(addressCityEntity)
                 .build();
         PersonEntity john = PersonEntity.PersonEntityBuilder.aPersonEntity()
                 //.withId(100)
