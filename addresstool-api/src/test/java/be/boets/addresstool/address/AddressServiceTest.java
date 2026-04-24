@@ -1,7 +1,5 @@
 package be.boets.addresstool.address;
 
-import be.boets.addresstool.address.client.CityClientService;
-import be.boets.addresstool.address.client.CityResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
