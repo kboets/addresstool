@@ -1,10 +1,10 @@
-import { computed, inject, Injectable, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { debounceTime, distinctUntilChanged, map, merge, Observable, of, switchMap } from 'rxjs';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { catchError, shareReplay } from 'rxjs/operators';
-import { HttpErrorService } from '@core/services/http-error.service';
-import { Result } from '@core/entities/result';
+import {computed, inject, Injectable, signal} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {debounceTime, distinctUntilChanged, map, merge, Observable, of, switchMap} from 'rxjs';
+import {toObservable, toSignal} from '@angular/core/rxjs-interop';
+import {catchError, shareReplay} from 'rxjs/operators';
+import {HttpErrorService} from '@core/services/http-error.service';
+import {Result} from '@core/entities/result';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +30,8 @@ export class AddressService {
 
   // retrieve all cities from zipcode
   private cityNamesResult$ = toObservable(this.selectedPostalCode).pipe(
-    //tap(zipCode => console.log("before the call to the backend: " + zipCode)),
+    debounceTime(500),
+    distinctUntilChanged(),
     switchMap((zipCode) => {
       if (!zipCode) {
         return of({ data: [], error: undefined } as Result<string[]>);
@@ -69,7 +70,7 @@ export class AddressService {
 
   //get postal code from city name
   private postalCodeResult$ = toObservable(this.selectedCityName).pipe(
-    debounceTime(300),
+    debounceTime(500),
     distinctUntilChanged(),
     switchMap((cityName) => {
       if (!cityName) {

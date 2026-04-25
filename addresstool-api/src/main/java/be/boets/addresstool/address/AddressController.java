@@ -26,7 +26,7 @@ public class AddressController {
 
     @GetMapping("/cityByPostalCode/{postcode}")
     public ResponseEntity<List<City>> findByPostalCode(@PathVariable String postcode) {
-        return ResponseEntity.ok(addressService.findByZipCode(postcode));
+        return ResponseEntity.ok(addressService.findByPostalCode(postcode));
     }
 
     @GetMapping("/cityByName/{cityName}")
@@ -36,7 +36,7 @@ public class AddressController {
 
     @GetMapping("/cityNamesByPostalCode/{postalCode}")
     public ResponseEntity<List<String>> findCityNamesByPostalCode(@PathVariable String postalCode) {
-        List<City> cities = addressService.findByZipCode(postalCode);
+        List<City> cities = addressService.findByPostalCode(postalCode);
         Set<String> cityNames = new HashSet<>(cities.stream().map(City::name).toList());
         return ResponseEntity.ok(new ArrayList<>(cityNames));
     }

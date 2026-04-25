@@ -6,6 +6,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -28,11 +29,13 @@ public class AddressService {
         this.cityRepository = cityRepository;
     }
 
-    public List<City> findByZipCode(String postcode) {
-        List<CityEntity> cityList = cityRepository.findByPostalCode(postcode);
+    @Cacheable(value = "cities", key = "#postalCode")
+    public List<City> findByPostalCode(String postalCode) {
+        List<CityEntity> cityList = cityRepository.findByPostalCode(postalCode);
         return toCity(cityList);
     }
 
+    @Cacheable(value = "cities", key = "#cityName")
     public List<City> findByCityName(String cityName) {
         List<CityEntity> cityList = cityRepository.searchByName(cityName);
         return toCity(cityList);

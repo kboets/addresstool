@@ -1,6 +1,7 @@
 package be.boets.addresstool.address;
 
 import be.boets.addresstool.SharedPostgressContainer;
+import be.boets.addresstool.config.AddressToolConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@Import({AddressService.class})
+@Import({AddressService.class, AddressToolConfiguration.class, AddressToolConfiguration.class})
 @Testcontainers
 public class AddressServiceIntegrationTest {
     @Container
@@ -29,7 +30,7 @@ public class AddressServiceIntegrationTest {
 
     @Test
     void givenValidPostalCode_findByPostalCode_shouldReturnListOfCities() {
-        List<City> cities = addressService.findByZipCode("3500");
+        List<City> cities = addressService.findByPostalCode("3500");
         assertThat(cities).isNotEmpty();
         assertThat(cities).hasSize(2);
         assertThat(cities.getFirst().name()).isEqualTo("Hasselt");
@@ -38,7 +39,7 @@ public class AddressServiceIntegrationTest {
 
     @Test
     void givenInvalidPostalCode_findByPostalCode_shouldReturnEmptyList() {
-        List<City> cities = addressService.findByZipCode("AB3500");
+        List<City> cities = addressService.findByPostalCode("AB3500");
         assertEquals(0, cities.size());
     }
 

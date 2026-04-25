@@ -4,7 +4,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.client.RestTestClient;
@@ -24,6 +28,15 @@ class CountryControllerTest {
     private CountryService countryService;
     @MockitoBean
     private CountryMapper countryMapper;
+
+    @TestConfiguration
+    static class TestCacheConfig {
+        @Bean
+        public CacheManager cacheManager() {
+            return new ConcurrentMapCacheManager("cities", "streets", "addresstool");
+        }
+    }
+
 
     @Test
     @DisplayName( "GET /api/getEuropeanCodes - should return all European countries with international phone codes")
