@@ -8,7 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 @EnableCaching
 public class AddresstoolApplication {
 
-	public static void main(String[] args) {
+	static void main(String[] args) {
 		SpringApplication.run(AddresstoolApplication.class, args);
 	}
 
