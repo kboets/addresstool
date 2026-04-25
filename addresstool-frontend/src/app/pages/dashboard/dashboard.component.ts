@@ -136,6 +136,7 @@ export class DashboardComponent implements OnInit {
   onCitySelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     const cityName = input.value;
+    if (cityName.length < 3) return;
     if (cityName) {
       this.addressService.cityNameSelected(cityName);
     }

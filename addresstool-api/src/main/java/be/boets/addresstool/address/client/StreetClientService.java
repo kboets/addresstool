@@ -1,5 +1,6 @@
 package be.boets.addresstool.address.client;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import tools.jackson.databind.json.JsonMapper;
@@ -21,6 +22,7 @@ public class StreetClientService {
         this.jsonMapper = jsonMapper;
     }
 
+    @Cacheable(value = "streets", key = "#postalCode")
     public List<String> findByPostalCode(String postalCode) {
         String response =  restClient
                 .get()
@@ -35,6 +37,7 @@ public class StreetClientService {
         return jsonMapper.readValue(response, List.class);
     }
 
+    @Cacheable(value = "addresstool", key = "#cityName")
     public List<String> findByCityName(String cityName) {
         String response =  restClient
                 .get()
