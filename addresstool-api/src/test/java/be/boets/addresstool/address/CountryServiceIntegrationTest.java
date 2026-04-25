@@ -3,6 +3,7 @@ package be.boets.addresstool.address;
 import be.boets.addresstool.SharedPostgressContainer;
 import be.boets.addresstool.address.client.CountryClientService;
 import be.boets.addresstool.address.client.CountryResponse;
+import be.boets.addresstool.config.AddressToolConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.when;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestPropertySource(properties = "spring.main.allow-bean-definition-overriding=true")
-@Import({CountryService.class})
+@Import({CountryService.class, AddressToolConfiguration.class})
 @Testcontainers
 public class CountryServiceIntegrationTest {
 

@@ -5,6 +5,7 @@ import be.boets.addresstool.address.AddressEntity;
 import be.boets.addresstool.address.AddressMapperImpl;
 import be.boets.addresstool.address.AddressCityEntity;
 import be.boets.addresstool.address.CityMapperImpl;
+import be.boets.addresstool.config.AddressToolConfiguration;
 import be.boets.addresstool.search.SearchCriteria;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         PersonMapperImpl.class,
         AddressMapperImpl.class,
         CityMapperImpl.class,
-        PersonJpaRepository.class})
+        PersonJpaRepository.class,
+        AddressToolConfiguration.class})
 @Testcontainers
 class PersonServiceIntegrationTest {
 

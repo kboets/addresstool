@@ -5,7 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.client.RestTestClient;
@@ -27,6 +31,14 @@ class AddressControllerTest {
     @MockitoBean
     private StreetClientService streetClientService;
 
+    @TestConfiguration
+    static class TestCacheConfig {
+        @Bean
+        public CacheManager cacheManager() {
+            return new ConcurrentMapCacheManager("cities", "streets", "addresstool");
+        }
+    }
+
     @Test
     @DisplayName( "GET /api/cityByPostalCode - should return all cities for the given zipcode")
     void findByPostalCode_givenValidPostalCode() {
@@ -35,7 +47,7 @@ class AddressControllerTest {
                 new City( "Wimmertingen", "3501", false),
                 new City( "Kermt", "3510", false)
         );
-        when(addressService.findByZipCode(any())).thenReturn(cities);
+        when(addressService.findByPostalCode(any())).thenReturn(cities);
 
         restTestClient.get().uri("/api/cityByPostalCode/3500").exchange()
                 .expectStatus().isOk()
@@ -70,7 +82,7 @@ class AddressControllerTest {
                 new City( "Wimmertingen", "3501", false),
                 new City( "Kermt", "3510", false)
         );
-        when(addressService.findByZipCode(any())).thenReturn(cities);
+        when(addressService.findByPostalCode(any())).thenReturn(cities);
 
         restTestClient.get().uri("/api/cityNamesByPostalCode/3500").exchange()
                 .expectStatus().isOk()

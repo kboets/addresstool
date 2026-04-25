@@ -4,6 +4,7 @@ import be.boets.addresstool.address.client.CountryClientService;
 import be.boets.addresstool.address.client.CountryResponse;
 import org.slf4j.Logger;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.event.EventListener;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class CountryService {
         this.countryMapper = countryMapper;
     }
 
+    @Cacheable(value = "addresstool", key = "'europeanPhoneCodes'")
     public List<Country> getAllEuropeanPhoneCodes() {
         return countryMapper.toCountryRecords(countryRepository.findAll(Sort.by("name").ascending()));
     }
